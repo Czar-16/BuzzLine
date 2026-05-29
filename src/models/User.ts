@@ -1,11 +1,9 @@
 import { model, models, Schema } from "mongoose";
 
-
-
 export interface IUser extends Document {
   name: string;
   email: string;
-  username: string;
+  username?: string;
   password?: string;
   isOnline: boolean;
   lastActive: Date;
@@ -14,7 +12,8 @@ export interface IUser extends Document {
   updatedAt: Date;
 }
 
-const UserSchema = new Schema<IUser>({
+const UserSchema = new Schema<IUser>(
+  {
     name: {
       type: String,
       required: true,
@@ -31,8 +30,8 @@ const UserSchema = new Schema<IUser>({
 
     username: {
       type: String,
-      required: true,
       unique: true,
+      sparse: true,
       trim: true,
       lowercase: true,
     },
@@ -57,9 +56,9 @@ const UserSchema = new Schema<IUser>({
   },
   {
     timestamps: true,
-  })
+  },
+);
 
 const UserModel = models.User || model<IUser>("User", UserSchema);
 
 export default UserModel;
-
