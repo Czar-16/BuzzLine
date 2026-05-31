@@ -5,6 +5,7 @@ declare module "next-auth" {
     user: {
       id: string;
       username?: string;
+      hasUsername?: boolean;
     } & DefaultSession["user"]; // add this also
   }
 
@@ -18,5 +19,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     username?: string;
+    hasUsername?:boolean;
   }
 }

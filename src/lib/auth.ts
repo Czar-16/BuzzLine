@@ -3,6 +3,7 @@ import { connectDB } from "./db";
 import bcrypt from "bcryptjs";
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -53,6 +54,10 @@ export const authOptions: AuthOptions = {
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
 
   //callbacks :
@@ -61,27 +66,76 @@ export const authOptions: AuthOptions = {
   // session callback frontend tak pohchata hai.
 
   callbacks: {
+    async signIn({ user, account }) {
+      try {
+        await connectDB();
+
+        if (account?.provider === "google") {
+          const existingUser = await UserModel.findOne({
+            email: user.email?.toLowerCase(),
+          });
+
+          if (!existingUser) {
+            await UserModel.create({
+              name: user.name,
+              email: user.email?.toLowerCase(),
+              isOnline: true,
+            });
+          }
+        }
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    },
+
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.username = (user as any).username;
+      await connectDB();
+      // if (user) {
+      //   token.id = user.id;
+      //   token.username = (user as any).username;
+      // }
+      // return token;
+
+      const email = user?.email || token.email;
+
+      if (email) {
+        const dUser = await UserModel.findOne({
+          email: email.toLowerCase(),
+        });
+
+        if (dUser) {
+          token.id = dUser._id.toString();
+          token.username = dUser.username;
+          token.hasUsername = !!dUser.username;
+        }
       }
       return token;
     },
+
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id;
         (session.user as any).username = token.username;
+        (session.user as any).hasUsername = token.hasUsername;
       }
 
       return session;
     },
   },
 
-  pages: {
-    signIn: "/login", // ← ab NextAuth mera /login page use karega
+  events: {
+    async signIn(message) {
+      console.log("User signed in");
+    },
   },
-  
+
+  //TODO: uncomment this page section
+  // pages: {
+  //   signIn: "/login", // ← ab NextAuth mera /login page use karega
+  // },
+
   session: {
     strategy: "jwt",
   },
