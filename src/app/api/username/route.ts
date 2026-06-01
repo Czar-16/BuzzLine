@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const session = await getServerSession(authOptions);
-    console.log(session);
+    // console.log(session);
     if (!session?.user?.email) {
       return NextResponse.json(
         {
