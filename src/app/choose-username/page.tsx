@@ -125,7 +125,7 @@ export default function ChooseUsernamePage() {
       } finally {
         setChecking(false);
       }
-    }, 600);
+    }, 800);
   };
 
   const saveUsername = async () => {

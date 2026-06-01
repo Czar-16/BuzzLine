@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 export default async function ChatPage() {
   const session = await getServerSession(authOptions);
-  console.log(session);
+  
 
   if (!session) {
     redirect("/login");
