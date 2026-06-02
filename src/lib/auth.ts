@@ -132,9 +132,9 @@ export const authOptions: AuthOptions = {
   },
 
   //TODO: uncomment this page section
-  // pages: {
-  //   signIn: "/login", // ← ab NextAuth mera /login page use karega
-  // },
+  pages: {
+    signIn: "/login", // ← ab NextAuth mera /login page use karega
+  },
 
   session: {
     strategy: "jwt",
