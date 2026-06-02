@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {signIn} from "next-auth/react"
 
-const syne = Syne({ subsets: ["latin"], weight: ["700", "800"] });
+import { syne } from "@/lib/fonts";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -122,9 +122,11 @@ export default function RegisterForm() {
         <Button
           variant="outline"
           className="flex-1 h-11 bg-[#0d0d0d] border-[#1e1e1e] text-[#888] hover:bg-[#111] hover:text-white hover:border-[#333] rounded-xl transition-all gap-2"
-          onClick={()=>{signIn("google",{
-            callbackUrl: "/"
-          })}}
+          onClick={() => {
+            signIn("google", {
+              callbackUrl: "/",
+            });
+          }}
         >
           <svg
             width="16"
@@ -166,6 +168,8 @@ export default function RegisterForm() {
         By signing up you agree to our{" "}
         <Link
           href="/terms"
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-[#383838] underline hover:text-white transition-colors"
         >
           Terms
@@ -173,6 +177,8 @@ export default function RegisterForm() {
         {" & "}
         <Link
           href="/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-[#383838] underline hover:text-white transition-colors"
         >
           Privacy Policy

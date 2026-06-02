@@ -1,16 +1,37 @@
+
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, Loader2, Info } from "lucide-react";
-import { Syne } from "next/font/google";
 import { toast } from "sonner";
-
 import { useRouter } from "next/navigation";
+import { syne } from "@/lib/fonts";
 
-const syne = Syne({ subsets: ["latin"], weight: ["700", "800"] });
+
+const bgBubbles = [
+  { side: "l", text: "Hey, you finally joined! 👋" },
+  { side: "r", text: "Yep, just picking a username 😎" },
+
+  { side: "l", text: "Make it a good one, people will remember it" },
+  { side: "r", text: "You are giving me pressure 🫠" },
+
+  { side: "l", text: "Most of the cool ones are probably taken" },
+  { side: "r", text: "Already finding that out :(" },
+
+  { side: "l", text: "this app is actually clean ngl" },
+  { side: "r", text: "whoever built this cooked" },
+
+  { side: "l", text: "Found your username yet?" },
+  { side: "r", text: "Got a few ideas cooking 🔥" },
+
+  { side: "l", text: "Don't take too long, we're waiting 👀" },
+  { side: "r", text: "Alright, almost done!" },
+
+  { side: "l", text: "Perfect. See you in chat 🚀" },
+  { side: "r", text: "On my way 😏" },
+];
 
 export default function ChooseUsernamePage() {
   const router = useRouter();
@@ -50,15 +71,12 @@ export default function ChooseUsernamePage() {
         body: JSON.stringify({ username }),
       });
       const data = await res.json();
-
       if (!res.ok) {
         toast.error(data.message || "Failed to save username");
         return;
       }
-      toast.success("Username created successfully🎉");
-      setTimeout(() => {
-        router.replace("/chat");
-      }, 1500);
+      toast.success("Username created successfully 🎉");
+      setTimeout(() => router.replace("/chat"), 1500);
     } catch (error) {
       console.log(error);
     } finally {
@@ -71,118 +89,161 @@ export default function ChooseUsernamePage() {
   const renderStatus = () => {
     if (!username)
       return (
-        <p className="flex items-center gap-1.5 text-xs text-neutral-600">
-          <Info size={12} /> 3–20 chars, letters, numbers, underscores
+        <p className="flex items-center gap-1.5 text-xs text-[#444]">
+          <Info size={12} />
+          3–20 chars, letters, numbers, underscores
         </p>
       );
     if (!isValid)
       return (
         <p className="flex items-center gap-1.5 text-xs text-red-500">
-          <XCircle size={12} /> Only letters, numbers, and underscores
+          <XCircle size={12} />
+          Only letters, numbers, and underscores
         </p>
       );
     if (checking)
       return (
-        <p className="flex items-center gap-1.5 text-xs text-neutral-500">
-          <Loader2 size={12} className="animate-spin" /> Checking
-          availability...
+        <p className="flex items-center gap-1.5 text-xs text-[#555]">
+          <Loader2 size={12} className="animate-spin" />
+          Checking availability...
         </p>
       );
     if (available === true)
       return (
         <p className="flex items-center gap-1.5 text-xs text-green-500">
-          <CheckCircle2 size={12} /> Available!
+          <CheckCircle2 size={12} />
+          Available!
         </p>
       );
     if (available === false)
       return (
         <p className="flex items-center gap-1.5 text-xs text-red-500">
-          <XCircle size={12} /> Username taken
+          <XCircle size={12} />
+          Username taken
         </p>
       );
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4">
-      <Card className="w-full max-w-md bg-[#0e0e0e] border border-[#222] rounded-3xl shadow-none">
-        {/* App name */}
-        <div className="flex items-center gap-2 px-6 pt-6">
+    <main className="min-h-screen bg-black flex items-center justify-center p-6 relative overflow-hidden">
+      {/* ── Background chat bubbles ── */}
+      <div className="absolute inset-0 flex flex-col gap-4 p-8 pointer-events-none select-none">
+        {bgBubbles.map((b, i) => (
+          <div
+            key={i}
+            className={`flex max-w-xs ${b.side === "r" ? "self-end" : "self-start"}`}
+          >
+            <div
+              className={`px-4 py-2.5 rounded-2xl text-xs leading-relaxed ${
+                b.side === "l"
+                  ? "bg-[#1c1c1c] border border-[#202020] text-[#c7c4c4] rounded-bl-sm"
+                  : "bg-[#1c1c1c] border border-[#2a2a2a] text-[#bbbaba] rounded-br-sm"
+              }`}
+            >
+              {b.text}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Radial overlay to darken center ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.65) 70%)",
+        }}
+      />
+
+      {/* ── Card ── */}
+      <div
+        className="relative z-10 w-full max-w-sm bg-[#0d0d0d]/90 border border-[#1e1e1e] rounded-3xl p-8 space-y-6"
+        style={{ backdropFilter: "blur(12px)" }}
+      >
+        {/* Brand */}
+        <div className="flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-white" />
-          <span className="text-[12px] font-medium  text-[#bebebe] uppercase">
+          <span
+            className="text-[11px] font-bold tracking-widest text-[#888] uppercase"
+            style={syne.style}
+          >
             Buzzline
           </span>
         </div>
 
-        <CardHeader className="pb-2">
-          <CardTitle
+        {/* Heading */}
+        <div>
+          <h1
             className="text-white text-3xl font-extrabold leading-tight tracking-tight"
             style={syne.style}
           >
             Pick your
             <br />
             username
-          </CardTitle>
-          <p className="text-[#666] text-sm leading-relaxed mt-1">
+          </h1>
+          <p className="text-[#555] text-sm leading-relaxed mt-2">
             Others will see this in chat. Choose wisely — it&apos;s permanent.
           </p>
-        </CardHeader>
+        </div>
 
-        <CardContent className="space-y-4">
-          {/* Input */}
-          <div className="space-y-1.5">
-            <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#444] text-sm pointer-events-none">
-                @
-              </span>
-              <Input
-                value={username}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setUsername(val);
-                  setAvailable(null);
-                  checkUsername(val);
-                }}
-                maxLength={20}
-                placeholder="yourname"
-                className="pl-7 h-12 bg-[#1a1a1a] border-[#2a2a2a] text-white placeholder:text-[#444] rounded-xl focus-visible:ring-0 focus-visible:border-[#555]"
-              />
+        {/* Input */}
+        <div className="space-y-1.5">
+          <div className="relative">
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#444] text-sm pointer-events-none">
+              @
+            </span>
+            <Input
+              value={username}
+              onChange={(e) => {
+                const val = e.target.value;
+                setUsername(val);
+                setAvailable(null);
+                checkUsername(val);
+              }}
+              maxLength={20}
+              placeholder="yourname"
+              className="pl-7 h-12 bg-[#111] border-[#222] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
+            />
+          </div>
+          <div className="min-h-[18px] px-0.5">{renderStatus()}</div>
+        </div>
+
+        {/* Button */}
+        <Button
+          onClick={saveUsername}
+          disabled={!available || loading}
+          className="w-full h-12 bg-white text-black text-sm font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-25 transition-all"
+        >
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <Loader2 size={14} className="animate-spin" /> Saving...
+            </span>
+          ) : (
+            "Save username"
+          )}
+        </Button>
+
+        {/* Divider */}
+        <div className="h-px bg-[#1a1a1a]" />
+
+        {/* Rules */}
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            "Permanent handle",
+            "No spaces",
+            "Visible to all",
+            "Case insensitive",
+          ].map((rule) => (
+            <div
+              key={rule}
+              className="bg-[#0a0a0a] border border-[#161616] rounded-xl px-3 py-2.5 text-[#333] text-[11px]"
+            >
+              {rule}
             </div>
-            <div className="min-h-[18px] px-0.5">{renderStatus()}</div>
-          </div>
-
-          {/* Button */}
-          <Button
-            onClick={saveUsername}
-            disabled={!available || loading}
-            className="w-full h-12 bg-white text-black text-sm font-semibold rounded-xl hover:bg-neutral-300 disabled:opacity-25 transition-all cursor-pointer"
-          >
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <Loader2 size={14} className="animate-spin" /> Saving...
-              </span>
-            ) : (
-              "Save username"
-            )}
-          </Button>
-
-          {/* Rules */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
-            {[
-              "Permanent handle",
-              "No spaces",
-              "Visible to all",
-              "Case insensitive",
-            ].map((rule) => (
-              <div
-                key={rule}
-                className="bg-[#111] border border-[#222] rounded-xl px-3 py-2.5 text-[#555] text-[11px]"
-              >
-                {rule}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          ))}
+        </div>
+      </div>
+    </main>
   );
 }
+

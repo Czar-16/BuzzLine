@@ -2,29 +2,30 @@
 
 import { signIn } from "next-auth/react";
 import { Syne } from "next/font/google";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Separator } from "../ui/separator";
 
-const syne = Syne({ subsets: ["latin"], weight: ["700", "800"] });
+import { syne } from "@/lib/fonts";
+
 export default function LoginForm() {
   const [username, setUsername] = useState("");
-
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
+
   const handleLogin = async () => {
     setLoading(true);
-
     try {
       const result = await signIn("credentials", {
         username,
         password,
         redirect: false,
       });
-      console.log(result);
 
       if (!result?.ok) {
         toast.error("Invalid username or password");
@@ -32,9 +33,7 @@ export default function LoginForm() {
       }
 
       toast.success("Login successful ✅");
-      setTimeout(() => {
-        router.replace("/");
-      }, 1000);
+      setTimeout(() => router.replace("/"), 1000);
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
@@ -44,49 +43,57 @@ export default function LoginForm() {
 
   return (
     <div className="flex flex-col justify-center space-y-5 w-full max-w-md px-10 py-12 bg-[#050505]">
+      {/* Heading */}
       <div>
-        <h1 className="text-white text-3xl font-extrabold">Welcome Back</h1>
-
+        <h1 className="text-white text-3xl font-extrabold" style={syne.style}>
+          Welcome back
+        </h1>
         <p className="text-[#444] text-sm mt-1.5 leading-relaxed">
-          Login to continue chatting.
+          Good to see you again. Let&apos;s get you in.
         </p>
       </div>
 
+      {/* Fields */}
       <div className="space-y-3">
-        <input
+        <Input
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full h-12 px-4 bg-[#0d0d0d] border border-[#1e1e1e] text-white rounded-xl"
+          className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
         />
-
-        <input
+        <Input
           type="password"
           placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full h-12 px-4 bg-[#0d0d0d] border border-[#1e1e1e] text-white rounded-xl"
+          className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
         />
       </div>
 
-      <button
+      {/* Submit */}
+      <Button
         onClick={handleLogin}
         disabled={loading}
-        className="w-full h-12 bg-white text-black font-semibold rounded-xl"
+        className="w-full h-12 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-30 transition-all text-sm"
       >
         {loading ? "Signing in..." : "Login"}
-      </button>
+      </Button>
 
-      {/* Google*/}
+      {/* Divider */}
+      <div className="relative flex items-center gap-3">
+        <Separator className="flex-1 bg-[#2a2a2a]" />
+        <span className="text-[11px] text-[#555] tracking-widest uppercase">
+          or continue with
+        </span>
+        <Separator className="flex-1 bg-[#2a2a2a]" />
+      </div>
+
+      {/* Google + Register link */}
       <div className="flex items-center gap-3">
         <Button
           variant="outline"
           className="flex-1 h-11 bg-[#0d0d0d] border-[#1e1e1e] text-[#888] hover:bg-[#111] hover:text-white hover:border-[#333] rounded-xl transition-all gap-2"
-          onClick={() => {
-            signIn("google", {
-              callbackUrl: "/",
-            });
-          }}
+          onClick={() => signIn("google", { callbackUrl: "/" })}
         >
           <svg
             width="16"
@@ -114,6 +121,28 @@ export default function LoginForm() {
           Google
         </Button>
       </div>
+
+      {/* Terms */}
+      <p className="text-[10px] text-[#2a2a2a] text-center leading-relaxed">
+        By signing in you agree to our{" "}
+        <Link
+          href="/terms"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#383838] underline hover:text-white transition-colors"
+        >
+          Terms
+        </Link>
+        {" & "}
+        <Link
+          href="/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#383838] underline hover:text-white transition-colors"
+        >
+          Privacy Policy
+        </Link>
+      </p>
     </div>
   );
 }
