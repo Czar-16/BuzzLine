@@ -1,19 +1,49 @@
 import { connectDB } from "@/lib/db";
 import UserModel from "@/models/User";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
+
+const registerSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name is too long"),
+
+  username: z
+    .string()
+    .trim()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username is too long")
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Username can only contain letters, numbers and underscores",
+    ),
+
+  email: z.string().trim().email("Invalid email address"),
+
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
-    const { name, email, username, password } = await req.json();
 
-    //validation
-    if (!name || !email || !username || !password) {
+    const body = await req.json();
+
+   
+    body.email = body.email?.toLowerCase();
+    body.username = body.username?.toLowerCase();
+
+    
+    const validation = registerSchema.safeParse(body);
+
+    if (!validation.success) {
       return NextResponse.json(
         {
           success: false,
-          message: "All fields are required",
+          message: validation.error.issues[0].message,
         },
         {
           status: 400,
@@ -21,15 +51,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const { name, email, username, password } = validation.data;
+
+   
     const existingEmail = await UserModel.findOne({
-      email: email.toLowerCase(),
+      email,
     });
 
     if (existingEmail) {
       return NextResponse.json(
         {
           success: false,
-          message: "Email already exist",
+          message: "Email already exists",
         },
         {
           status: 400,
@@ -37,15 +70,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    
     const existingUsername = await UserModel.findOne({
-      username: username.toLowerCase(),
+      username,
     });
 
     if (existingUsername) {
       return NextResponse.json(
         {
           success: false,
-          message: "Username already exist",
+          message: "Username already exists",
         },
         {
           status: 400,
@@ -53,13 +87,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // hash password
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
+   
     const user = await UserModel.create({
       name,
-      email: email.toLowerCase(),
-      username: username.toLowerCase(),
+      email,
+      username,
       password: hashedPassword,
     });
 
@@ -79,11 +114,12 @@ export async function POST(req: NextRequest) {
       },
     );
   } catch (error) {
-    console.log(error);
+    console.error("Registration Error:", error);
+
     return NextResponse.json(
       {
         success: false,
-        message: "Registration Failed",
+        message: "Registration failed",
       },
       {
         status: 500,

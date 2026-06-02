@@ -1,94 +1,3 @@
-// "use client";
-
-// import { useState } from "react";
-// import { Button } from "@/components/ui/button";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Input } from "@/components/ui/input";
-
-// export default function ChooseUsernamePage() {
-
-//   const [username, setUsername] = useState("");
-//   const [available, setAvailable] = useState<boolean| null>()
-
-//   const [loading, setLoading] = useState(false);
-
-//   const checkUsername = async(username: string)=>{
-//    try {
-//      const res = await fetch(`/api/username/check?username=${username}`)
-//      const data =  await res.json();
-//      setAvailable(data.available);
-//    } catch (error) {
-//       console.log(error);
-//    }
-
-//   }
-
-//   const saveUsername = async ()=>{
-//     try {
-//       setLoading(true);
-
-//       const res = await fetch("/api/username", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type" : "application/json",
-//         },
-//         body: JSON.stringify({username})
-//       })
-
-//       const data =await res.json();
-//       alert(data.message);
-
-//     } catch (error) {
-//       console.log(error);
-
-//     }
-//     finally{
-//       setLoading(false)
-//     }
-//   }
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center px-4">
-//       <Card className="w-full max-w-md">
-//         <div className="text-center text-3xl font-bold">Buzzline</div>
-//         <CardHeader>
-//           <CardTitle className="text-2xl">Choose Username</CardTitle>
-//         </CardHeader>
-
-//         <CardContent className="space-y-4">
-//           <Input
-//             value={username}
-//             onChange={(e) => {
-//               setUsername(e.target.value);
-//               checkUsername(e.target.value);
-//             }}
-//             placeholder="Enter username"
-//           />
-
-//           {available === true && (
-//             <p className="text-sm text-green-500">Username Available</p>
-//           )}
-
-//           {available === false && (
-//             <p className="text-sm text-red-500">Username Taken</p>
-//           )}
-
-//           <Button
-//             onClick={saveUsername}
-//             disabled={!available || loading}
-//             className="w-full"
-//           >
-//             {loading ? "Saving..." : "Save Username"}
-//           </Button>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   );
-
-// }
-
-//-----------------------------
-
 "use client";
 
 import { useState } from "react";
@@ -97,10 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { CheckCircle2, XCircle, Loader2, Info } from "lucide-react";
 import { Syne } from "next/font/google";
+import { toast } from "sonner";
+import router from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const syne = Syne({ subsets: ["latin"], weight: ["700", "800"] });
 
 export default function ChooseUsernamePage() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [available, setAvailable] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
@@ -125,7 +38,7 @@ export default function ChooseUsernamePage() {
       } finally {
         setChecking(false);
       }
-    }, 800);
+    }, 900);
   };
 
   const saveUsername = async () => {
@@ -137,7 +50,15 @@ export default function ChooseUsernamePage() {
         body: JSON.stringify({ username }),
       });
       const data = await res.json();
-      alert(data.message);
+
+      if (!res.ok) {
+        toast.error(data.message || "Failed to save username");
+        return;
+      }
+      toast.success("Username created successfully🎉");
+      setTimeout(() => {
+        router.replace("/chat");
+      }, 1500);
     } catch (error) {
       console.log(error);
     } finally {
