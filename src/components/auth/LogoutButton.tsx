@@ -13,6 +13,6 @@ export default function LogoutButton() {
       }}
     >
       Logout
-    </Button>
+    </Button >
   );
 }

@@ -1,4 +1,4 @@
-import { model, models, ObjectId, Schema, Types } from "mongoose";
+import { model, models, ObjectId, Schema, Types, Document } from "mongoose";
 
 export interface IConversation extends Document {
   participants: Types.ObjectId[];

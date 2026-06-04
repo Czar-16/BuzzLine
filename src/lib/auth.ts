@@ -92,11 +92,6 @@ export const authOptions: AuthOptions = {
 
     async jwt({ token, user }) {
       await connectDB();
-      // if (user) {
-      //   token.id = user.id;
-      //   token.username = (user as any).username;
-      // }
-      // return token;
 
       const email = user?.email || token.email;
 
@@ -116,9 +111,9 @@ export const authOptions: AuthOptions = {
 
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id;
-        (session.user as any).username = token.username;
-        (session.user as any).hasUsername = token.hasUsername;
+        session.user.id = token.id;
+        session.user.username = token.username;
+        session.user.hasUsername = token.hasUsername;
       }
 
       return session;

@@ -1,6 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
-import UserModel from "@/models/User";
+import ConversationModel from "@/models/Conversation";
+import MessageModel from "@/models/Message";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,12 +10,11 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const session = await getServerSession(authOptions);
-    // console.log(session);
-    if (!session?.user?.email) {
+    if (!session) {
       return NextResponse.json(
         {
           success: false,
-          message: "unauthorized",
+          message: "Unauthorized",
         },
         {
           status: 401,
@@ -22,12 +22,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { username } = await req.json();
-    if (!username) {
+    const { conversationId, text } = await req.json();
+    if (!conversationId || !text) {
       return NextResponse.json(
         {
           success: false,
-          message: "Username is required",
+          message: "Conversation and text are required",
         },
         {
           status: 400,
@@ -35,41 +35,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const existingUser = await UserModel.findOne({
-      username: username.toLowerCase(),
+    const message = await MessageModel.create({
+      sender: session.user.id,
+      conversation: conversationId,
+      text: text.trim(),
     });
 
-    if (existingUser) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Username is taken",
-        },
-        {
-          status: 400,
-        },
-      );
-    }
-
-    await UserModel.findOneAndUpdate(
+    await ConversationModel.findByIdAndUpdate(conversationId, {
+      latestMessage: message._id,
+    });
+    return NextResponse.json(
       {
-        email: session.user.email.toLowerCase(),
+        success: true,
+        message,
       },
       {
-        username: username.toLowerCase(),
+        status: 201,
       },
     );
-    return NextResponse.json({
-      success: true,
-      message: "Username saved successfully",
-    });
   } catch (error) {
     console.log(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Something went wrong",
+        message: "Failed to send message",
       },
       {
         status: 500,
