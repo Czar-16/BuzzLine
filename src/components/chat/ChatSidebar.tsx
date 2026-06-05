@@ -1,33 +1,70 @@
-import { Search } from "lucide-react";
+"use client";
 
-const conversations = [
-  {
-    id: 1,
-    username: "@alex",
-    lastMessage: "fr this app is clean 🔥",
-    online: true,
-  },
-  {
-    id: 2,
-    username: "@John",
-    lastMessage: "you there?",
-    online: true,
-  },
-  {
-    id: 3,
-    username: "@Czar",
-    lastMessage: "real-time is insane here",
-    online: false,
-  },
-  {
-    id: 4,
-    username: "@bott",
-    lastMessage: "sent you something",
-    online: false,
-  },
-];
+import { Search } from "lucide-react";
+import { useEffect, useState } from "react";
+
+interface Conversation {
+  _id: string;
+  participants: any[];
+  latestMessage?: any;
+}
+
+//   {
+//     id: 1,
+//     username: "@alex",
+//     lastMessage: "fr this app is clean 🔥",
+//     online: true,
+//   },
+//   {
+//     id: 2,
+//     username: "@John",
+//     lastMessage: "you there?",
+//     online: true,
+//   },
+//   {
+//     id: 3,
+//     username: "@Czar",
+//     lastMessage: "real-time is insane here",
+//     online: false,
+//   },
+//   {
+//     id: 4,
+//     username: "@bott",
+//     lastMessage: "sent you something",
+//     online: false,
+//   },
+// ];
 
 export default function ChatSidebar() {
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchConversations = async () => {
+      try {
+        const res = await fetch("/api/conversations");
+        const data = await res.json();
+
+        if (data.success) {
+          setConversations(data.conversations);
+        }
+        console.log("conversation is : ", data.conversations);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchConversations();
+  }, []);
+
+  if (loading) {
+    return (
+      <aside className="w-80 border-r border-neutral-900 bg-black">
+        <div className="p-4 text-white">Loading conversations...</div>
+      </aside>
+    );
+  }
   return (
     <aside className="w-80 border-r border-neutral-900 bg-black flex flex-col">
       {/* Logo */}
@@ -56,32 +93,22 @@ export default function ChatSidebar() {
         </p>
 
         <div className="space-y-2">
-          {conversations.map((conversation) => (
-            <div
-              key={conversation.id}
-              className="rounded-xl border border-neutral-900 p-3 hover:bg-neutral-950 cursor-pointer"
-            >
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="h-10 w-10 rounded-full bg-neutral-800" />
-
-                  {conversation.online && (
-                    <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border border-black" />
-                  )}
-                </div>
-
-                <div className="flex-1">
-                  <p className="font-medium text-white">
-                    {conversation.username}
-                  </p>
-
-                  <p className="text-sm text-neutral-500 truncate">
-                    {conversation.lastMessage}
-                  </p>
-                </div>
-              </div>
+          {conversations.length === 0 ? (
+            <div className="text-neutral-500 text-sm p-3">
+              No conversations found
             </div>
-          ))}
+          ) : (
+            conversations.map((conversation) => (
+              <div
+                key={conversation._id}
+                className="rounded-xl border border-neutral-900 p-3 hover:bg-neutral-950"
+              >
+                <p className="text-white text-xs break-all">
+                  {conversation._id}
+                </p>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

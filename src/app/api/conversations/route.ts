@@ -96,7 +96,10 @@ export async function GET() {
 
     const conversations = await ConversationModel.find({
       participants: session.user.id,
-    });
+    })
+      .populate("participants", "username name email")
+      .populate("latestMessage")
+      .sort({ updatedAt: -1 });
     return NextResponse.json(
       {
         success: true,
