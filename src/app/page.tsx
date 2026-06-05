@@ -2,9 +2,7 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import RegisterForm from "@/components/auth/RegisterForm";
-import { syne } from "@/lib/fonts"
-
-
+import { syne } from "@/lib/fonts";
 
 const bubbles = [
   { from: "them", avatar: "A", handle: "@alex", text: "Hey, you there? 👋" },

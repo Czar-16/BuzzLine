@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 export default function LogoutButton() {
   return (
     <Button
+      className="cursor-pointer text-black"
       onClick={() => {
         signOut({
           callbackUrl: "/",
@@ -13,6 +14,6 @@ export default function LogoutButton() {
       }}
     >
       Logout
-    </Button >
+    </Button>
   );
 }
