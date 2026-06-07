@@ -43,7 +43,7 @@ export default async function LoginPage() {
         <div className="border-r border-[#1e1e1e] p-8 flex flex-col justify-between gap-8">
           {/* Brand */}
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-white" />
+            <div className="w-2 h-2 rounded-full bg-green-500" />
             <span
               className="text-white text-sm font-bold tracking-widest uppercase"
               style={syne.style}

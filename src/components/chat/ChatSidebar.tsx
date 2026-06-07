@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 interface Conversation {
@@ -9,35 +10,13 @@ interface Conversation {
   latestMessage?: any;
 }
 
-//   {
-//     id: 1,
-//     username: "@alex",
-//     lastMessage: "fr this app is clean 🔥",
-//     online: true,
-//   },
-//   {
-//     id: 2,
-//     username: "@John",
-//     lastMessage: "you there?",
-//     online: true,
-//   },
-//   {
-//     id: 3,
-//     username: "@Czar",
-//     lastMessage: "real-time is insane here",
-//     online: false,
-//   },
-//   {
-//     id: 4,
-//     username: "@bott",
-//     lastMessage: "sent you something",
-//     online: false,
-//   },
-// ];
-
-export default function ChatSidebar() {
+export default function ChatSidebar({ selectedConversation, setSelectedConversation }: {
+  selectedConversation: any; // TODO: replace with proper type if needed
+  setSelectedConversation: (value: any) => void;
+}) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -70,7 +49,7 @@ export default function ChatSidebar() {
       {/* Logo */}
 
       <div className="p-5 border-b border-neutral-900 flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-white" />
+        <div className="w-2 h-2 rounded-full bg-green-500" />
         <h1 className="text-xl font-bold tracking-wider text-white">
           BUZZLINE
         </h1>
@@ -98,16 +77,34 @@ export default function ChatSidebar() {
               No conversations found
             </div>
           ) : (
-            conversations.map((conversation) => (
-              <div
-                key={conversation._id}
-                className="rounded-xl border border-neutral-900 p-3 hover:bg-neutral-950"
-              >
-                <p className="text-white text-xs break-all">
-                  {conversation._id}
-                </p>
-              </div>
-            ))
+            conversations.map((conversation) => {
+              
+              const otherUser = conversation.participants.find(
+                (participant: any) => participant._id !== session?.user.id,
+              );
+
+              return (
+                <div
+                  key={conversation._id}
+                  onClick={()=> setSelectedConversation(conversation)}
+                  className="rounded-xl border border-neutral-900 p-3 hover:bg-neutral-950 cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-neutral-800" />
+
+                    <div className="flex-1">
+                      <p className="font-medium text-white">
+                        @{otherUser?.username}
+                      </p>
+
+                      <p className="text-sm text-neutral-500 truncate">
+                        {conversation.latestMessage?.text || "Start chatting"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
       </div>
@@ -118,7 +115,7 @@ export default function ChatSidebar() {
           <div className="h-10 w-10 rounded-full bg-neutral-700" />
 
           <div>
-            <p className="text-white text-sm">@you</p>
+            <p className="text-white text-sm">@{session?.user?.username}</p>
             <p className="text-xs text-green-500">Online</p>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import ConversationModel from "@/models/Conversation";
+import "@/models/Message"; // ensure Message model registration
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
