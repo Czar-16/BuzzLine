@@ -9,7 +9,7 @@ export default function TestPage() {
       },
       body: JSON.stringify({
         conversationId: "6a22ed025a3a736c09e1ffc7",
-        text: "Hello Rahul",
+        text: "This Buzzline app is really 🔥",
       }),
     });
 

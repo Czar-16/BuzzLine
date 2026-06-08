@@ -1,5 +1,6 @@
 "use client";
 
+import { syne } from "@/lib/fonts";
 import { Search } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -10,7 +11,10 @@ interface Conversation {
   latestMessage?: any;
 }
 
-export default function ChatSidebar({ selectedConversation, setSelectedConversation }: {
+export default function ChatSidebar({
+  selectedConversation,
+  setSelectedConversation,
+}: {
   selectedConversation: any; // TODO: replace with proper type if needed
   setSelectedConversation: (value: any) => void;
 }) {
@@ -39,18 +43,21 @@ export default function ChatSidebar({ selectedConversation, setSelectedConversat
 
   if (loading) {
     return (
-      <aside className="w-80 border-r border-neutral-900 bg-black">
+      <aside className="w-80 border-r border-green-500 bg-black">
         <div className="p-4 text-white">Loading conversations...</div>
       </aside>
     );
   }
   return (
-    <aside className="w-80 border-r border-neutral-900 bg-black flex flex-col">
+    <aside className="w-80 border-r border-green-500 bg-black flex flex-col">
       {/* Logo */}
 
-      <div className="p-5 border-b border-neutral-900 flex items-center gap-2">
+      <div className="p-5 border-b border-green-500 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-green-500" />
-        <h1 className="text-xl font-bold tracking-wider text-white">
+        <h1
+          className="text-xl font-bold tracking-wider text-white"
+          style={syne.style}
+        >
           BUZZLINE
         </h1>
       </div>
@@ -67,7 +74,10 @@ export default function ChatSidebar({ selectedConversation, setSelectedConversat
 
       {/* Conversations */}
       <div className="flex-1 px-3">
-        <p className="mb-3 text-xs uppercase tracking-widest text-neutral-500">
+        <p
+          className="mb-3 text-xs uppercase tracking-widest text-neutral-300"
+          style={syne.style}
+        >
           Messages
         </p>
 
@@ -78,7 +88,6 @@ export default function ChatSidebar({ selectedConversation, setSelectedConversat
             </div>
           ) : (
             conversations.map((conversation) => {
-              
               const otherUser = conversation.participants.find(
                 (participant: any) => participant._id !== session?.user.id,
               );
@@ -86,14 +95,14 @@ export default function ChatSidebar({ selectedConversation, setSelectedConversat
               return (
                 <div
                   key={conversation._id}
-                  onClick={()=> setSelectedConversation(conversation)}
+                  onClick={() => setSelectedConversation(conversation)}
                   className="rounded-xl border border-neutral-900 p-3 hover:bg-neutral-950 cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-neutral-800" />
 
                     <div className="flex-1">
-                      <p className="font-medium text-white">
+                      <p className="font-medium text-white" style={syne.style}>
                         @{otherUser?.username}
                       </p>
 
@@ -110,7 +119,7 @@ export default function ChatSidebar({ selectedConversation, setSelectedConversat
       </div>
 
       {/* Current User */}
-      <div className="border-t border-neutral-900 p-4">
+      <div className="border-t border-green-500 p-4">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full bg-neutral-700" />
 

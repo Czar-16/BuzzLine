@@ -18,7 +18,7 @@ export default async function ChatPage() {
   }
 
   return (
-    <div className="h-screen bg-black flex">
+    <div className="h-screen bg-black flex ">
       <ChatLayout />
     </div>
   );

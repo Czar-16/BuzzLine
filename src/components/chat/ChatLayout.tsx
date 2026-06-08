@@ -8,7 +8,7 @@ export default function ChatLayout() {
   const [selectedConversation, setSelectedConversation] = useState(null);
 
   return (
-    <div>
+    <div className="w-full flex h-screen">
       <ChatSidebar
         selectedConversation={selectedConversation}
         setSelectedConversation={setSelectedConversation}
