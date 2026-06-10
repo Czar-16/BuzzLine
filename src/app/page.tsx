@@ -2,7 +2,7 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import RegisterForm from "@/components/auth/RegisterForm";
-import { syne } from "@/lib/fonts";
+import { patrickHand, syne } from "@/lib/fonts";
 
 const bubbles = [
   { from: "them", avatar: "A", handle: "@alex", text: "Hey, you there? 👋" },
@@ -25,7 +25,7 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-black flex items-center justify-center p-6">
-      <div className="w-full max-w-4xl bg-[#0d0d0d] border border-[#1e1e1e] rounded-3xl overflow-hidden grid lg:grid-cols-2">
+      <div className="w-full max-w-4xl bg-[#0a0a0a]  border border-[#1e1e1e] rounded-3xl overflow-hidden grid lg:grid-cols-2">
         {/* ── LEFT PANEL ── */}
         <div className="border-r border-[#1e1e1e] p-8 flex flex-col justify-between gap-8">
           {/* Brand */}
@@ -49,10 +49,14 @@ export default async function HomePage() {
                     ? "self-end items-end"
                     : "self-start items-start"
                 }`}
+                style={syne.style}
               >
                 {b.from === "them" && (
                   <div className="flex items-center gap-1.5">
-                    <div className="w-6 h-6 rounded-full bg-[#1a1a1a] border border-[#252525] flex items-center justify-center text-[10px] text-[#666] font-semibold">
+                    <div
+                      className="w-6 h-6 rounded-full bg-[#1a1a1a] border border-[#252525] flex items-center justify-center text-[10px] text-[#666] font-semibold"
+                      style={syne.style}
+                    >
                       {b.avatar}
                     </div>
                     <span className="text-[11px] text-[#555]">{b.handle}</span>
@@ -64,6 +68,7 @@ export default async function HomePage() {
                       ? "bg-[#1c1c1c] border border-[#2a2a2a] text-[#ccc] rounded-br-sm"
                       : "bg-[#141414] border border-[#202020] text-[#999] rounded-bl-sm"
                   }`}
+                  style={patrickHand.style}
                 >
                   {b.text}
                 </div>
@@ -75,7 +80,9 @@ export default async function HomePage() {
           <div>
             <div className="inline-flex items-center gap-2 bg-[#111] border border-[#1e1e1e] rounded-full px-3 py-1.5 mb-5">
               <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              <span className="text-[11px] text-[#888]">2,400 online now</span>
+              <span className="text-[10px] text-[#bebdbd]" style={syne.style}>
+                2,400 online now
+              </span>
             </div>
 
             <h2
@@ -87,7 +94,7 @@ export default async function HomePage() {
               <span className="text-[#555]">No lag. No fluff.</span>
             </h2>
 
-            <p className="text-[#555] text-sm mb-4">
+            <p className="text-[#555] text-sm mb-4" style={syne.style}>
               Pick a username, start chatting instantly.
             </p>
 

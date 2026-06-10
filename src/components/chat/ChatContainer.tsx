@@ -76,9 +76,9 @@ export default function ChatContainer({
   return (
     <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
       {selectedConversation && (
-        <div className="border-b border-neutral-800 px-6 py-3.5  flex items-center gap-3">
+        <div className="border-b border-zinc-900 px-6 py-3.5  flex items-center gap-3">
           <div
-            className="h-10 w-10 rounded-full bg-neutral-800 flex items-center justify-center shrink-0 text-white text-sm font-semibold"
+            className="h-10 w-10 rounded-full bg-neutral-950 flex items-center justify-center shrink-0 text-white text-sm font-semibold"
             style={syne.style}
           >
             {otherUser?.username?.[0]?.toUpperCase()}
@@ -112,7 +112,7 @@ export default function ChatContainer({
                   className={`mb-4 flex ${isOwn ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className="rounded-xl bg-neutral-900 p-3 text-neutral-200 max-w-[70%] break-words overflow-hidden"
+                    className="rounded-xl bg-[#121318] p-3 text-neutral-200 max-w-[70%] break-words overflow-hidden"
                     style={patrickHand.style}
                   >
                     {chatMessage.text}
@@ -126,8 +126,8 @@ export default function ChatContainer({
       </div>
 
       {selectedConversation && (
-        <div className="border-t border-neutral-900 p-4">
-          <div className="flex gap-3 items-end">
+        <div className="border-t border-zinc-900 p-4 ">
+          <div className="flex gap-3 items-end ">
             {" "}
             <textarea
               autoFocus
@@ -146,7 +146,7 @@ export default function ChatContainer({
               }}
               placeholder={`Message @${otherUser?.username || "user"}...`}
               rows={1}
-              className="flex-1 rounded-xl border border-neutral-800 bg-neutral-950 px-4 py-2 text-white outline-none resize-none custom-scrollbar"
+              className="flex-1 rounded-xl border border-zinc-900 bg-neutral-950 px-4 py-2 text-white outline-none resize-none custom-scrollbar"
               style={{
                 ...patrickHand.style,
                 maxHeight: "120px",
@@ -158,7 +158,7 @@ export default function ChatContainer({
             />
             <button
               onClick={sendMessage}
-              className="rounded-xl border border-neutral-800 p-2.5 text-white cursor-pointer hover:bg-neutral-800 transition-colors"
+              className="rounded-xl border border-zinc-900 p-2.5 text-white cursor-pointer hover:bg-neutral-900 transition-colors"
             >
               <SendHorizonal size={19} strokeWidth={2} />
             </button>

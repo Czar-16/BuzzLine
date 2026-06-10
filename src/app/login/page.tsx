@@ -2,7 +2,7 @@ import LoginForm from "@/components/auth/LoginForm";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { syne } from "@/lib/fonts";
+import { patrickHand, syne } from "@/lib/fonts";
 
 const tiles = [
   {
@@ -38,9 +38,9 @@ export default async function LoginPage() {
 
   return (
     <main className="min-h-screen bg-black flex items-center justify-center p-6">
-      <div className="w-full max-w-4xl bg-[#0d0d0d] border border-[#1e1e1e] rounded-3xl overflow-hidden grid lg:grid-cols-2">
+      <div className="w-full max-w-4xl bg-[#0a0a0a] border border-[#1e1e1e] rounded-3xl overflow-hidden grid lg:grid-cols-2">
         {/* ── LEFT PANEL ── */}
-        <div className="border-r border-[#1e1e1e] p-8 flex flex-col justify-between gap-8">
+        <div className="border-r border-zinc-900 p-8 flex flex-col justify-between gap-8">
           {/* Brand */}
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-500" />
@@ -60,6 +60,7 @@ export default async function LoginPage() {
                 className={`bg-[#111] border border-[#1a1a1a] rounded-2xl p-4 flex gap-3 ${
                   t.wide ? "col-span-2 flex-row items-center" : "flex-col"
                 }`}
+                style={patrickHand.style}
               >
                 <span className="text-xl flex-shrink-0">{t.icon}</span>
                 <div>
@@ -69,7 +70,10 @@ export default async function LoginPage() {
                   >
                     {t.title}
                   </p>
-                  <p className="text-[#444] text-xs leading-relaxed">
+                  <p
+                    className="text-[#444] text-xs leading-relaxed"
+                    style={patrickHand.style}
+                  >
                     {t.desc}
                   </p>
                 </div>
@@ -88,11 +92,12 @@ export default async function LoginPage() {
               <br />
               <span className="text-[#333]">You were missed.</span>
             </h2>
-            <p className="text-[#333] text-xs mt-2">
+            <p className="text-[#333] text-xs mt-2" style={syne.style}>
               New here?{" "}
               <a
-                href="/register"
-                className="text-[#555] underline hover:text-white transition-colors"
+                href="/"
+                className="text-[#444343]  text-xs underline hover:text-neutral-300 transition-colors"
+                style={syne.style}
               >
                 Create an account
               </a>

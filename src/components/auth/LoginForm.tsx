@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 
-import { syne } from "@/lib/fonts";
+import { patrickHand, syne } from "@/lib/fonts";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -42,13 +42,16 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="flex flex-col justify-center space-y-5 w-full max-w-md px-10 py-12 bg-[#050505]">
+    <div className="flex flex-col justify-center space-y-5 w-full max-w-md px-10 py-12 bg-[#070706] rounded-3xl">
       {/* Heading */}
       <div>
         <h1 className="text-white text-3xl font-extrabold" style={syne.style}>
           Welcome back
         </h1>
-        <p className="text-[#444] text-sm mt-1.5 leading-relaxed">
+        <p
+          className="text-[#444] text-sm mt-1.5 leading-relaxed"
+          style={patrickHand.style}
+        >
           Good to see you again. Let&apos;s get you in.
         </p>
       </div>
@@ -57,6 +60,7 @@ export default function LoginForm() {
       <div className="space-y-3">
         <Input
           placeholder="Username"
+          style={patrickHand.style}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
@@ -74,7 +78,8 @@ export default function LoginForm() {
       <Button
         onClick={handleLogin}
         disabled={loading}
-        className="w-full h-12 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-30 transition-all text-sm"
+        className="w-full h-12 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-30 transition-all text-base cursor-pointer"
+        style={patrickHand.style}
       >
         {loading ? "Signing in..." : "Login"}
       </Button>
@@ -82,7 +87,10 @@ export default function LoginForm() {
       {/* Divider */}
       <div className="relative flex items-center gap-3">
         <Separator className="flex-1 bg-[#2a2a2a]" />
-        <span className="text-[11px] text-[#555] tracking-widest uppercase">
+        <span
+          className="text-[9px] text-[#555] tracking-widest uppercase"
+          style={syne.style}
+        >
           or continue with
         </span>
         <Separator className="flex-1 bg-[#2a2a2a]" />
@@ -92,7 +100,8 @@ export default function LoginForm() {
       <div className="flex items-center gap-3">
         <Button
           variant="outline"
-          className="flex-1 h-11 bg-[#0d0d0d] border-[#1e1e1e] text-[#888] hover:bg-[#111] hover:text-white hover:border-[#333] rounded-xl transition-all gap-2"
+          className="flex-1 h-11 bg-[#0d0d0d] border-[#1e1e1e] text-[#888] hover:bg-[#111] hover:text-white hover:border-[#333] rounded-xl transition-all gap-2 cursor-pointer"
+          style={syne.style}
           onClick={() => signIn("google", { callbackUrl: "/" })}
         >
           <svg
@@ -123,13 +132,17 @@ export default function LoginForm() {
       </div>
 
       {/* Terms */}
-      <p className="text-[10px] text-[#2a2a2a] text-center leading-relaxed">
+      <p
+        className="text-[10px] text-[#2a2a2a] text-center leading-relaxed"
+        style={syne.style}
+      >
         By signing in you agree to our{" "}
         <Link
           href="/terms"
           target="_blank"
           rel="noopener noreferrer"
           className="text-[#383838] underline hover:text-white transition-colors"
+          style={syne.style}
         >
           Terms
         </Link>
@@ -139,6 +152,7 @@ export default function LoginForm() {
           target="_blank"
           rel="noopener noreferrer"
           className="text-[#383838] underline hover:text-white transition-colors"
+          style={syne.style}
         >
           Privacy Policy
         </Link>

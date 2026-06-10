@@ -1,9 +1,23 @@
 "use client";
 
 import { patrickHand, syne } from "@/lib/fonts";
-import { Search, UserRound } from "lucide-react";
+import { LogOut, Search, UserRound } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+
+import { Settings } from "lucide-react";
+import { signOut } from "next-auth/react";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 interface Conversation {
   _id: string;
@@ -44,15 +58,17 @@ export default function ChatSidebar({
   if (loading) {
     return (
       <aside className="w-80 border-r border-neutral-800 bg-black">
-        <div className="p-4 text-white">Loading conversations...</div>
+        <div className="p-4 text-white" style={syne.style}>
+          Loading conversations...
+        </div>
       </aside>
     );
   }
   return (
-    <aside className="w-80 border-r border-neutral-800 bg-black flex flex-col">
+    <aside className="w-80 border-r border-zinc-900 bg-black flex flex-col">
       {/* Logo */}
 
-      <div className="p-5 border-b border-neutral-800 flex items-center gap-2">
+      <div className="p-5 border-b border-zinc-900 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-green-500" />
         <h1
           className="text-xl font-bold tracking-wider text-white cursor-default"
@@ -63,7 +79,7 @@ export default function ChatSidebar({
       </div>
       {/* Search */}
       <div className="p-4 ">
-        <div className="flex items-center gap-2 rounded-xl border border-neutral-800 bg-neutral-950 px-3 py-2 ">
+        <div className="flex items-center gap-2 rounded-xl border border-zinc-900 bg-neutral-950 hover:bg-black px-3 py-2 ">
           <Search size={16} className="text-neutral-500" />
           <input
             placeholder="Search username..."
@@ -101,14 +117,14 @@ export default function ChatSidebar({
                   className={`rounded-xl border p-3 cursor-pointer transition-all min-w-0
                       ${
                         isSelected
-                          ? "bg-neutral-900 border-neutral-700"
+                          ? "bg-neutral-950 border-zinc-900"
                           : "border-neutral-900 hover:bg-neutral-950"
                       }
                  `}
                 >
                   <div className="flex items-center gap-3 overflow-hidden">
                     <div
-                      className="h-10 w-10 rounded-full bg-neutral-800 flex items-center justify-center shrink-0 text-white text-sm font-bold"
+                      className="h-10 w-10 rounded-full bg-[#121318] flex items-center justify-center shrink-0 text-white text-sm font-bold"
                       style={syne.style}
                     >
                       {otherUser?.username?.[0]?.toUpperCase()}
@@ -135,20 +151,55 @@ export default function ChatSidebar({
       </div>
 
       {/* Current User */}
-      <div className="border-t border-neutral-800 p-4">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-neutral-900 flex justify-center items-center">
-            <UserRound className="h-6 w-6" />
+
+      <div className="border-t border-zinc-900 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-[#121318] flex justify-center items-center">
+              <UserRound className="h-6 w-6" />
+            </div>
+            <div>
+              <p className="text-white text-sm" style={syne.style}>
+                @{session?.user?.username}
+              </p>
+              <p className="text-xs text-green-500" style={syne.style}>
+                Online
+              </p>
+            </div>
           </div>
 
-          <div>
-            <p className="text-white text-sm" style={syne.style}>
-              @{session?.user?.username}
-            </p>
-            <p className="text-xs text-green-500" style={syne.style}>
-              Online
-            </p>
-          </div>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-all cursor-pointer">
+                <LogOut size={18} />
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-[#121318] border-neutral-900">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-white" style={syne.style}>
+                  Logout?
+                </AlertDialogTitle>
+                <AlertDialogDescription style={syne.style}>
+                  Are you sure you want to logout?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel
+                  className="border-neutral-800 text-white hover:bg-neutral-900 cursor-pointer"
+                  style={syne.style}
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => signOut()}
+                  className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+                  style={syne.style}
+                >
+                  Logout
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </aside>

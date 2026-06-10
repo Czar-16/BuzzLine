@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -9,9 +8,9 @@ import { useState } from "react";
 import { Syne } from "next/font/google";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {signIn} from "next-auth/react"
+import { signIn } from "next-auth/react";
 
-import { syne } from "@/lib/fonts";
+import { patrickHand, syne } from "@/lib/fonts";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -51,15 +50,17 @@ export default function RegisterForm() {
     }
   };
 
-
   return (
-    <div className="flex flex-col justify-center space-y-5 w-full max-w-md px-10 py-12 bg-[#050505]">
+    <div className="flex flex-col justify-center space-y-5 w-full max-w-md px-10 py-12 bg-[#070706] rounded-xl">
       {/* Heading */}
       <div>
         <h1 className="text-white text-3xl font-extrabold" style={syne.style}>
           Join Buzzline
         </h1>
-        <p className="text-[#444] text-sm mt-1.5 leading-relaxed">
+        <p
+          className="text-[#444] text-sm mt-1.5 leading-relaxed"
+          style={patrickHand.style}
+        >
           Your username. Your vibe. Start chatting in seconds.
         </p>
       </div>
@@ -70,7 +71,8 @@ export default function RegisterForm() {
           placeholder="Full name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
+          className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors "
+          style={patrickHand.style}
         />
 
         <Input
@@ -78,6 +80,7 @@ export default function RegisterForm() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
+          style={patrickHand.style}
         />
 
         <Input
@@ -86,6 +89,7 @@ export default function RegisterForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
+          style={patrickHand.style}
         />
 
         <Input
@@ -101,7 +105,8 @@ export default function RegisterForm() {
       <Button
         onClick={handleSubmit}
         disabled={loading}
-        className="w-full h-12 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-30 transition-all text-sm"
+        className="w-full h-12 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-30 transition-all text-base cursor-pointer"
+        style={patrickHand.style}
       >
         {loading ? "Creating..." : "Create account"}
       </Button>
@@ -110,7 +115,10 @@ export default function RegisterForm() {
       <div className="relative flex items-center gap-3">
         <Separator className="flex-1 bg-[#2a2a2a]" />
 
-        <span className="text-[11px] text-[#555] tracking-widest uppercase">
+        <span
+          className="text-[8px] text-[#555] tracking-widest uppercase"
+          style={syne.style}
+        >
           or continue with
         </span>
 
@@ -121,7 +129,8 @@ export default function RegisterForm() {
       <div className="flex items-center gap-3">
         <Button
           variant="outline"
-          className="flex-1 h-11 bg-[#0d0d0d] border-[#1e1e1e] text-[#888] hover:bg-[#111] hover:text-white hover:border-[#333] rounded-xl transition-all gap-2"
+          className="flex-1 h-11 bg-[#0a0a0a] border-[#1e1e1e] text-[#9e9e9e] hover:bg-[#000000] hover:text-white hover:border-[#1a1a1a] rounded-xl transition-all gap-2 cursor-pointer"
+          style={syne.style}
           onClick={() => {
             signIn("google", {
               callbackUrl: "/",
@@ -156,15 +165,21 @@ export default function RegisterForm() {
 
         <Link
           href="/login"
-          className="text-[#555] text-xs hover:text-white transition-colors whitespace-nowrap"
+          className="text-[#555] text-xs hover:text-neutral-100 transition-colors whitespace-nowrap"
+          style={patrickHand.style}
         >
           Have an account?{" "}
-          <span className="text-[#888] underline">Sign in</span>
+          <span className="text-[#888] underline" style={syne.style}>
+            Sign in
+          </span>
         </Link>
       </div>
 
       {/* Terms */}
-      <p className="text-[10px] text-[#2a2a2a] text-center leading-relaxed">
+      <p
+        className="text-[10px] text-[#2a2a2a] text-center leading-relaxed"
+        style={patrickHand.style}
+      >
         By signing up you agree to our{" "}
         <Link
           href="/terms"
