@@ -3,7 +3,16 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
-
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #313131;
+  border-radius: 999px;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

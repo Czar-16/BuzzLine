@@ -1,16 +1,24 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { syne } from "@/lib/fonts";
-import { formatDistanceToNow } from "date-fns";
+import { patrickHand, syne } from "@/lib/fonts";
+import { SendHorizonal, UserRound } from "lucide-react";
 
 export default function ChatContainer({
   selectedConversation,
 }: {
   selectedConversation: any;
 }) {
-  const [messages, setMessages] = useState<any[]>([]);
+  const [chatMessages, setChatMessages] = useState<any[]>([]); // all messgae already in the chat
   const [loading, setLoading] = useState(false);
+  const [messageText, setMessageText] = useState(""); // user currently typing
+
+  const bottomRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "instant",
+    });
+  }, [chatMessages]);
 
   useEffect(() => {
     if (!selectedConversation) return;
@@ -21,7 +29,7 @@ export default function ChatContainer({
         const data = await res.json();
 
         if (data.success) {
-          setMessages(data.messages);
+          setChatMessages(data.messages);
         }
       } catch (error) {
         console.log(error);
@@ -36,44 +44,127 @@ export default function ChatContainer({
   const otherUser = selectedConversation?.participants.find(
     (p: any) => p._id !== session?.user?.id,
   );
-  console.log("this is the op", otherUser);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const sendMessage = async () => {
+    if (!messageText.trim()) return;
+
+    try {
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          conversationId: selectedConversation._id,
+          text: messageText,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to send");
+      const data = await res.json();
+      console.log("data is : ", data);
+
+      if (data.success) {
+        setChatMessages((prev) => [...prev, data.message]);
+        setMessageText("");
+        if (textareaRef.current) textareaRef.current.style.height = "auto";
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
-    <div className="flex-1 flex flex-col">
-      <div className="border-b border-green-600 px-6 py-3.5">
-        <h2 className="text-white font-semibold" style={syne.style}>
-          @{otherUser?.username}
-        </h2>
-        <p className="text-xs text-neutral-500">User status coming soon...</p>
-      </div>
-
-      <div className="flex-1 flex  text-neutral-500">
+    <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+      {selectedConversation && (
+        <div className="border-b border-neutral-800 px-6 py-3.5  flex items-center gap-3">
+          <div
+            className="h-10 w-10 rounded-full bg-neutral-800 flex items-center justify-center shrink-0 text-white text-sm font-semibold"
+            style={syne.style}
+          >
+            {otherUser?.username?.[0]?.toUpperCase()}
+          </div>
+          <div>
+            <h2 className="text-white font-semibold" style={syne.style}>
+              @{otherUser?.username}
+            </h2>
+            <p className="text-xs text-neutral-500" style={syne.style}>
+              User status coming soon...
+            </p>
+          </div>
+        </div>
+      )}
+      <div className="flex-1 flex  text-neutral-500 min-h-0">
         {!selectedConversation ? (
-          <div className="flex-1 flex items-center justify-center text-neutral-500">
-            No conversation selected
+          <div className="flex-1 flex items-center justify-center text-neutral-500 ">
+            Pick a conversation, don't be shy.
           </div>
         ) : loading ? (
           <div className="flex-1 flex items-center justify-center text-neutral-500">
             Loading...
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto p-6">
-            {messages.map((message) => {
-              const isOwn = message.sender === session?.user?.id;
+          <div className="flex-1 overflow-y-auto p-4 min-w-0 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:rounded-full">
+            {chatMessages.map((chatMessage) => {
+              const isOwn = chatMessage.sender === session?.user?.id;
               return (
                 <div
-                  key={message._id}
+                  key={chatMessage._id}
                   className={`mb-4 flex ${isOwn ? "justify-end" : "justify-start"}`}
                 >
-                  <div className="rounded-xl bg-neutral-900 p-3 text-white max-w-[70%] wrap-break-word">
-                    {message.text}
+                  <div
+                    className="rounded-xl bg-neutral-900 p-3 text-neutral-200 max-w-[70%] break-words overflow-hidden"
+                    style={patrickHand.style}
+                  >
+                    {chatMessage.text}
                   </div>
                 </div>
               );
             })}
+            <div ref={bottomRef}></div>
           </div>
         )}
       </div>
+
+      {selectedConversation && (
+        <div className="border-t border-neutral-900 p-4">
+          <div className="flex gap-3 items-end">
+            {" "}
+            <textarea
+              autoFocus
+              value={messageText}
+              ref={textareaRef}
+              onChange={(e) => {
+                setMessageText(e.target.value);
+                e.target.style.height = "auto";
+                e.target.style.height = e.target.scrollHeight + "px";
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
+              placeholder={`Message @${otherUser?.username || "user"}...`}
+              rows={1}
+              className="flex-1 rounded-xl border border-neutral-800 bg-neutral-950 px-4 py-2 text-white outline-none resize-none custom-scrollbar"
+              style={{
+                ...patrickHand.style,
+                maxHeight: "120px",
+                overflowY:
+                  (textareaRef.current?.scrollHeight ?? 0) > 120
+                    ? "auto"
+                    : "hidden",
+              }}
+            />
+            <button
+              onClick={sendMessage}
+              className="rounded-xl border border-neutral-800 p-2.5 text-white cursor-pointer hover:bg-neutral-800 transition-colors"
+            >
+              <SendHorizonal size={19} strokeWidth={2} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
