@@ -60,7 +60,7 @@ export default function LoginForm() {
       <div className="space-y-3">
         <Input
           placeholder="Username"
-          style={patrickHand.style}
+          style={syne.style}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
@@ -79,7 +79,7 @@ export default function LoginForm() {
         onClick={handleLogin}
         disabled={loading}
         className="w-full h-12 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-30 transition-all text-base cursor-pointer"
-        style={patrickHand.style}
+        style={syne.style}
       >
         {loading ? "Signing in..." : "Login"}
       </Button>

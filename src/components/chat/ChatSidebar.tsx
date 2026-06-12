@@ -96,11 +96,26 @@ export default function ChatSidebar({
         }),
       });
       const data = await res.json();
+      console.log("POST conversation:", data.conversation);
+      // if (data.success) {
+      //   setSelectedConversation(data.conversation);
+      //   setSearch("");
+      //   setSearchResult([]);
+      // }
+
+      // true/false deta hai, bas exist karta hai ya nahi
       if (data.success) {
+        const exists = conversations.some(
+          (convo: any) => convo._id === data.conversation.id,
+        );
+        if (!exists) {
+          setConversations((prev: any) => [data.conversation, ...prev]); // new conversation could be seen on sidebar on top
+        }
         setSelectedConversation(data.conversation);
         setSearch("");
         setSearchResult([]);
       }
+
       console.log(data);
     } catch (error) {
       console.log(error);

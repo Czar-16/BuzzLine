@@ -20,7 +20,11 @@ export default function ChatLayout() {
         setSelectedConversation={setSelectedConversation}
       />
 
-      <ChatContainer selectedConversation={selectedConversation} />
+      <ChatContainer
+        selectedConversation={selectedConversation}
+        conversations={conversations}
+        setConversations={setConversations}
+      />
     </div>
   );
 }

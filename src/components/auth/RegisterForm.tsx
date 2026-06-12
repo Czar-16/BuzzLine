@@ -72,7 +72,7 @@ export default function RegisterForm() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors "
-          style={patrickHand.style}
+          style={syne.style}
         />
 
         <Input
@@ -80,7 +80,7 @@ export default function RegisterForm() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
-          style={patrickHand.style}
+          style={syne.style}
         />
 
         <Input
@@ -89,7 +89,7 @@ export default function RegisterForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="h-12 bg-[#0d0d0d] border border-[#1e1e1e] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
-          style={patrickHand.style}
+          style={syne.style}
         />
 
         <Input
@@ -106,7 +106,7 @@ export default function RegisterForm() {
         onClick={handleSubmit}
         disabled={loading}
         className="w-full h-12 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-30 transition-all text-base cursor-pointer"
-        style={patrickHand.style}
+        style={syne.style}
       >
         {loading ? "Creating..." : "Create account"}
       </Button>

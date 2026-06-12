@@ -35,11 +35,19 @@ export async function POST(req: NextRequest) {
     }
     const currentUserId = session.user.id;
 
+    // let conversation = await ConversationModel.findOne({
+    //   participants: {
+    //     $all: [currentUserId, userId],
+    //   },
+    // });
     let conversation = await ConversationModel.findOne({
       participants: {
         $all: [currentUserId, userId],
       },
-    });
+    })
+      .populate("participants", "username name email isOnline lastActive")
+      .populate("latestMessage");
+
     if (conversation) {
       return NextResponse.json(
         {
@@ -55,6 +63,11 @@ export async function POST(req: NextRequest) {
     conversation = await ConversationModel.create({
       participants: [currentUserId, userId],
     });
+
+    conversation = await ConversationModel.findById(conversation._id).populate(
+      "participants",
+      "username name email isOnline lastActive",
+    );
     return NextResponse.json(
       {
         success: true,

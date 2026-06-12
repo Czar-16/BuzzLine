@@ -6,14 +6,19 @@ import { SendHorizonal, UserRound } from "lucide-react";
 
 export default function ChatContainer({
   selectedConversation,
+  conversations,
+  setConversations,
 }: {
   selectedConversation: any;
+  conversations: any[];
+  setConversations: (value: any) => void;
 }) {
   const [chatMessages, setChatMessages] = useState<any[]>([]); // all messgae already in the chat
   const [loading, setLoading] = useState(false);
   const [messageText, setMessageText] = useState(""); // user currently typing
 
   const bottomRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behavior: "instant",
@@ -45,6 +50,7 @@ export default function ChatContainer({
     (p: any) => p._id !== session?.user?.id,
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
   const sendMessage = async () => {
     if (!messageText.trim()) return;
 
@@ -59,13 +65,33 @@ export default function ChatContainer({
           text: messageText,
         }),
       });
+
       if (!res.ok) throw new Error("Failed to send");
       const data = await res.json();
+
       console.log("data is : ", data);
+      console.log("message returned:", data.message);
 
       if (data.success) {
         setChatMessages((prev) => [...prev, data.message]);
+        setConversations((prev: any[]) =>
+          // console.log("before update", prev)
+
+          prev.map((conversation) => {
+            console.log("before update", prev);
+            if (conversation._id === selectedConversation._id) {
+              return {
+                ...conversation,
+                latestMessage: data.message,
+              };
+            }
+            return conversation;
+          }),
+        );
+        // console.log("selectedConversation", selectedConversation);
+
         setMessageText("");
+
         if (textareaRef.current) textareaRef.current.style.height = "auto";
       }
     } catch (error) {
