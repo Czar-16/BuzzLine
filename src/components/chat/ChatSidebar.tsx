@@ -24,16 +24,21 @@ interface Conversation {
   participants: any[];
   latestMessage?: any;
 }
-
 export default function ChatSidebar({
+  conversations,
+  setConversations,
+  loading,
+  setLoading,
   selectedConversation,
   setSelectedConversation,
-}: {
-  selectedConversation: any; // TODO: replace with proper type if needed
-  setSelectedConversation: (value: any) => void;
-}) {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [loading, setLoading] = useState(true);
+}: any) {
+  // export default function ChatSidebar({
+  //   selectedConversation,
+  //   setSelectedConversation,
+  // }: {
+  //   selectedConversation: any; // TODO: replace with proper type if needed
+  //   setSelectedConversation: (value: any) => void;
+  // }) {
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -55,6 +60,53 @@ export default function ChatSidebar({
     fetchConversations();
   }, []);
 
+  const [search, setSearch] = useState("");
+  const [searchResult, setSearchResult] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (search.length < 2) {
+      setSearchResult([]);
+      return;
+    }
+
+    const searchUsers = async () => {
+      try {
+        const res = await fetch(`/api/users/search?q=${search}`);
+        const data = await res.json();
+        if (data.success) {
+          setSearchResult(data.users);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const timer = setTimeout(searchUsers, 500);
+    return () => clearTimeout(timer); //  cancel previous timer if user types again before 500ms
+  }, [search]);
+
+  const startConversation = async (userId: string) => {
+    try {
+      const res = await fetch("/api/conversations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedConversation(data.conversation);
+        setSearch("");
+        setSearchResult([]);
+      }
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (loading) {
     return (
       <aside className="w-80 border-r border-neutral-800 bg-black">
@@ -67,7 +119,6 @@ export default function ChatSidebar({
   return (
     <aside className="w-80 border-r border-zinc-900 bg-black flex flex-col">
       {/* Logo */}
-
       <div className="p-5 border-b border-zinc-900 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-green-500" />
         <h1
@@ -82,15 +133,33 @@ export default function ChatSidebar({
         <div className="flex items-center gap-2 rounded-xl border border-zinc-900 bg-neutral-950 hover:bg-black px-3 py-2 ">
           <Search size={16} className="text-neutral-500" />
           <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search username..."
             className="w-full bg-transparent outline-none text-sm text-white "
             style={syne.style}
           />
         </div>
       </div>
-
-      {/* Conversations */}
-      <div className="flex-1 px-3">
+      {searchResult.length > 0 && (
+        <div className="mx-4 mb-2 rounded-xl border border-zinc-900 bg-[#0d0d0d] overflow-hidden">
+          {searchResult.map((user) => (
+            <div
+              key={user._id}
+              onClick={() => startConversation(user._id)}
+              className="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-neutral-900 transition-colors"
+              style={syne.style}
+            >
+              <div className="h-8 w-8 rounded-full bg-[#121318] flex items-center justify-center shrink-0 text-white text-xs font-bold">
+                {user.username[0].toUpperCase()}
+              </div>
+              <span className="text-white text-sm">@{user.username}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {/* Conversations  and the scroll bar*/}
+      <div className="flex-1 px-3 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-800 [&::-webkit-scrollbar-thumb]:rounded-full">
         <p
           className="mb-3 text-xs uppercase tracking-widest text-neutral-300 "
           style={syne.style}
@@ -104,7 +173,7 @@ export default function ChatSidebar({
               No conversations found
             </div>
           ) : (
-            conversations.map((conversation) => {
+            conversations.map((conversation: any) => {
               const isSelected = selectedConversation?._id === conversation._id;
               const otherUser = conversation.participants.find(
                 (participant: any) => participant._id !== session?.user.id,
@@ -149,9 +218,7 @@ export default function ChatSidebar({
           )}
         </div>
       </div>
-
       {/* Current User */}
-
       <div className="border-t border-zinc-900 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
