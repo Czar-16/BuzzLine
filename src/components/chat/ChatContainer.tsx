@@ -138,7 +138,7 @@ export default function ChatContainer({
                   className={`mb-4 flex ${isOwn ? "justify-end" : "justify-start"}`}
                 >
                   <div className="max-w-[70%] w-fit" style={dmSans.style}>
-                    <div className="rounded-xl bg-[#121318] p-3 text-neutral-200 break-words overflow-hidden">
+                    <div className="rounded-xl bg-[#121318] p-3 text-neutral-200 wrap-break-word overflow-hidden">
                       <p>{chatMessage.text}</p>
                       <span
                         className={`text-[10px] text-neutral-500 mt-1 flex ${isOwn ? "justify-end" : "justify-end"}`}

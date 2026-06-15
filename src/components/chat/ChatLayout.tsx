@@ -1,13 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatSidebar from "./ChatSidebar";
 import ChatContainer from "./ChatContainer";
+import { socket } from "@/lib/socket-client";
 
 export default function ChatLayout() {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [conversations, setConversations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected to socket server: ", socket.id);
+    });
+    return () => {
+      socket.off("connect");
+    };
+  }, []);
 
   return (
     <div className="w-full flex h-screen overflow-hidden">
