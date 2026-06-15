@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -7,31 +6,27 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, Loader2, Info } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { syne } from "@/lib/fonts";
-
+import { dmSans, syne } from "@/lib/fonts";
+import { useSession } from "next-auth/react";
 
 const bgBubbles = [
   { side: "l", text: "Hey, you finally joined! 👋" },
   { side: "r", text: "Yep, just picking a username 😎" },
-
   { side: "l", text: "Make it a good one, people will remember it" },
   { side: "r", text: "You are giving me pressure 🫠" },
-
   { side: "l", text: "Most of the cool ones are probably taken" },
   { side: "r", text: "Already finding that out :(" },
-
   { side: "l", text: "this app is actually clean ngl" },
   { side: "r", text: "whoever built this cooked" },
-
   { side: "l", text: "Found your username yet?" },
   { side: "r", text: "Got a few ideas cooking 🔥" },
-
   { side: "l", text: "Don't take too long, we're waiting 👀" },
   { side: "r", text: "Alright, almost done!" },
-
   { side: "l", text: "Perfect. See you in chat 🚀" },
   { side: "r", text: "On my way 😏" },
 ];
+
+const topOffsets = [2, 5, 3, 7, 4, 6, 2, 8, 3, 5, 4, 6, 3, 7];
 
 export default function ChooseUsernamePage() {
   const router = useRouter();
@@ -62,6 +57,8 @@ export default function ChooseUsernamePage() {
     }, 1000);
   };
 
+  const { update } = useSession();
+
   const saveUsername = async () => {
     try {
       setLoading(true);
@@ -76,6 +73,7 @@ export default function ChooseUsernamePage() {
         return;
       }
       toast.success("Username created successfully 🎉");
+      await update();
       setTimeout(() => router.replace("/chat"), 1500);
     } catch (error) {
       console.log(error);
@@ -89,35 +87,50 @@ export default function ChooseUsernamePage() {
   const renderStatus = () => {
     if (!username)
       return (
-        <p className="flex items-center gap-1.5 text-xs text-[#444]">
+        <p
+          className="flex items-center gap-1.5 text-xs text-[#555]"
+          style={dmSans.style}
+        >
           <Info size={12} />
           3–20 chars, letters, numbers, underscores
         </p>
       );
     if (!isValid)
       return (
-        <p className="flex items-center gap-1.5 text-xs text-red-500">
+        <p
+          className="flex items-center gap-1.5 text-xs text-red-500"
+          style={dmSans.style}
+        >
           <XCircle size={12} />
-          Only letters, numbers, and underscores
+          min 3 chars : Only letters, numbers, and underscores
         </p>
       );
     if (checking)
       return (
-        <p className="flex items-center gap-1.5 text-xs text-[#555]">
+        <p
+          className="flex items-center gap-1.5 text-xs text-[#555]"
+          style={dmSans.style}
+        >
           <Loader2 size={12} className="animate-spin" />
           Checking availability...
         </p>
       );
     if (available === true)
       return (
-        <p className="flex items-center gap-1.5 text-xs text-green-500">
+        <p
+          className="flex items-center gap-1.5 text-xs text-green-500"
+          style={dmSans.style}
+        >
           <CheckCircle2 size={12} />
           Available!
         </p>
       );
     if (available === false)
       return (
-        <p className="flex items-center gap-1.5 text-xs text-red-500">
+        <p
+          className="flex items-center gap-1.5 text-xs text-red-500"
+          style={dmSans.style}
+        >
           <XCircle size={12} />
           Username taken
         </p>
@@ -126,19 +139,21 @@ export default function ChooseUsernamePage() {
 
   return (
     <main className="min-h-screen bg-black flex items-center justify-center p-6 relative overflow-hidden">
-      {/* ── Background chat bubbles ── */}
-      <div className="absolute inset-0 flex flex-col gap-4 p-8 pointer-events-none select-none">
+      {/* Background chat bubbles */}
+      <div className="absolute inset-0 flex flex-col gap-3 p-8 pointer-events-none select-none">
         {bgBubbles.map((b, i) => (
           <div
             key={i}
             className={`flex max-w-xs ${b.side === "r" ? "self-end" : "self-start"}`}
+            style={{ marginTop: `${topOffsets[i]}px` }}
           >
             <div
               className={`px-4 py-2.5 rounded-2xl text-xs leading-relaxed ${
                 b.side === "l"
-                  ? "bg-[#1c1c1c] border border-[#202020] text-[#c7c4c4] rounded-bl-sm"
-                  : "bg-[#1c1c1c] border border-[#2a2a2a] text-[#bbbaba] rounded-br-sm"
+                  ? "bg-[#141414] border border-[#1e1e1e] text-[#aaa] rounded-bl-sm"
+                  : "bg-[#141414] border border-[#222] text-[#999] rounded-br-sm"
               }`}
+              style={dmSans.style}
             >
               {b.text}
             </div>
@@ -146,25 +161,25 @@ export default function ChooseUsernamePage() {
         ))}
       </div>
 
-      {/* ── Radial overlay to darken center ── */}
+      {/* Radial overlay */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.65) 70%)",
+            "radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.75) 65%)",
         }}
       />
 
-      {/* ── Card ── */}
+      {/* Card */}
       <div
-        className="relative z-10 w-full max-w-sm bg-[#0d0d0d]/90 border border-[#1e1e1e] rounded-3xl p-8 space-y-6"
+        className="relative z-10 w-full max-w-sm bg-[#0a0a0a]/90 border border-[#1e1e1e] rounded-3xl p-8 space-y-7"
         style={{ backdropFilter: "blur(12px)" }}
       >
         {/* Brand */}
         <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-white" />
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
           <span
-            className="text-[11px] font-bold tracking-widest text-[#888] uppercase"
+            className="text-[12px] font-bold tracking-widest text-[#666] uppercase leading-none"
             style={syne.style}
           >
             Buzzline
@@ -181,8 +196,11 @@ export default function ChooseUsernamePage() {
             <br />
             username
           </h1>
-          <p className="text-[#555] text-sm leading-relaxed mt-2">
-            Others will see this in chat. Choose wisely — it&apos;s permanent.
+          <p
+            className="text-[#777] text-sm leading-relaxed mt-2"
+            style={dmSans.style}
+          >
+            Everyone&apos;s already talking. Are you?
           </p>
         </div>
 
@@ -203,6 +221,7 @@ export default function ChooseUsernamePage() {
               maxLength={20}
               placeholder="yourname"
               className="pl-7 h-12 bg-[#111] border-[#222] text-white placeholder:text-[#333] rounded-xl focus-visible:ring-0 focus-visible:border-[#444] transition-colors"
+              style={syne.style}
             />
           </div>
           <div className="min-h-[18px] px-0.5">{renderStatus()}</div>
@@ -212,10 +231,11 @@ export default function ChooseUsernamePage() {
         <Button
           onClick={saveUsername}
           disabled={!available || loading}
-          className="w-full h-12 bg-white text-black text-sm font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-25 transition-all"
+          className="w-full h-12 bg-white text-black text-sm font-semibold rounded-xl hover:bg-neutral-200 disabled:opacity-25 transition-all cursor-pointer"
+          style={syne.style}
         >
           {loading ? (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2" style={syne.style}>
               <Loader2 size={14} className="animate-spin" /> Saving...
             </span>
           ) : (
@@ -236,7 +256,8 @@ export default function ChooseUsernamePage() {
           ].map((rule) => (
             <div
               key={rule}
-              className="bg-[#0a0a0a] border border-[#161616] rounded-xl px-3 py-2.5 text-[#333] text-[11px]"
+              className="bg-[#0d0d0d] border border-[#1a1a1a] rounded-xl px-3 py-2.5 text-[#666] text-[11px]"
+              style={syne.style}
             >
               {rule}
             </div>
@@ -246,4 +267,3 @@ export default function ChooseUsernamePage() {
     </main>
   );
 }
-

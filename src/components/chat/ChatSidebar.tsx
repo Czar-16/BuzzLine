@@ -1,6 +1,6 @@
 "use client";
 
-import { patrickHand, syne } from "@/lib/fonts";
+import { dmSans, syne } from "@/lib/fonts";
 import { LogOut, Search, UserRound } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -221,7 +221,7 @@ export default function ChatSidebar({
 
                       <p
                         className="text-sm text-neutral-500 truncate"
-                        style={patrickHand.style}
+                        style={dmSans.style}
                       >
                         {conversation.latestMessage?.text || "Start chatting"}
                       </p>

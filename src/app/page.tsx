@@ -2,7 +2,7 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import RegisterForm from "@/components/auth/RegisterForm";
-import { patrickHand, syne } from "@/lib/fonts";
+import { dmSans, syne } from "@/lib/fonts";
 
 const bubbles = [
   { from: "them", avatar: "A", handle: "@alex", text: "Hey, you there? 👋" },
@@ -68,7 +68,7 @@ export default async function HomePage() {
                       ? "bg-[#1c1c1c] border border-[#2a2a2a] text-[#ccc] rounded-br-sm"
                       : "bg-[#141414] border border-[#202020] text-[#999] rounded-bl-sm"
                   }`}
-                  style={patrickHand.style}
+                  style={dmSans.style}
                 >
                   {b.text}
                 </div>

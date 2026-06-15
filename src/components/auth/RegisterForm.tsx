@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 
-import { patrickHand, syne } from "@/lib/fonts";
+import { dmSans, syne } from "@/lib/fonts";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -59,9 +59,9 @@ export default function RegisterForm() {
         </h1>
         <p
           className="text-[#444] text-sm mt-1.5 leading-relaxed"
-          style={patrickHand.style}
+          style={dmSans.style}
         >
-          Your username. Your vibe. Start chatting in seconds.
+          Everyone's already talking.
         </p>
       </div>
 
@@ -166,7 +166,7 @@ export default function RegisterForm() {
         <Link
           href="/login"
           className="text-[#555] text-xs hover:text-neutral-100 transition-colors whitespace-nowrap"
-          style={patrickHand.style}
+          style={dmSans.style}
         >
           Have an account?{" "}
           <span className="text-[#888] underline" style={syne.style}>
@@ -178,7 +178,7 @@ export default function RegisterForm() {
       {/* Terms */}
       <p
         className="text-[10px] text-[#2a2a2a] text-center leading-relaxed"
-        style={patrickHand.style}
+        style={syne.style}
       >
         By signing up you agree to our{" "}
         <Link
@@ -186,6 +186,7 @@ export default function RegisterForm() {
           target="_blank"
           rel="noopener noreferrer"
           className="text-[#383838] underline hover:text-white transition-colors"
+          style={syne.style}
         >
           Terms
         </Link>
@@ -195,6 +196,7 @@ export default function RegisterForm() {
           target="_blank"
           rel="noopener noreferrer"
           className="text-[#383838] underline hover:text-white transition-colors"
+          style={syne.style}
         >
           Privacy Policy
         </Link>

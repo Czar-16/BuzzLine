@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { patrickHand, syne } from "@/lib/fonts";
+import { dmSans, syne } from "@/lib/fonts";
 import { SendHorizonal, UserRound } from "lucide-react";
 
 export default function ChatContainer({
@@ -139,7 +139,7 @@ export default function ChatContainer({
                 >
                   <div
                     className="rounded-xl bg-[#121318] p-3 text-neutral-200 max-w-[70%] break-words overflow-hidden"
-                    style={patrickHand.style}
+                    style={dmSans.style}
                   >
                     {chatMessage.text}
                   </div>
@@ -174,7 +174,7 @@ export default function ChatContainer({
               rows={1}
               className="flex-1 rounded-xl border border-zinc-900 bg-neutral-950 px-4 py-2 text-white outline-none resize-none custom-scrollbar"
               style={{
-                ...patrickHand.style,
+                ...dmSans.style,
                 maxHeight: "120px",
                 overflowY:
                   (textareaRef.current?.scrollHeight ?? 0) > 120

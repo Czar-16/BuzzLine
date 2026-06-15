@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 
-import { patrickHand, syne } from "@/lib/fonts";
+import { dmSans, syne } from "@/lib/fonts";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -50,7 +50,7 @@ export default function LoginForm() {
         </h1>
         <p
           className="text-[#444] text-sm mt-1.5 leading-relaxed"
-          style={patrickHand.style}
+          style={dmSans.style}
         >
           Good to see you again. Let&apos;s get you in.
         </p>

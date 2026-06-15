@@ -2,7 +2,7 @@ import LoginForm from "@/components/auth/LoginForm";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { patrickHand, syne } from "@/lib/fonts";
+import { dmSans, syne } from "@/lib/fonts";
 
 const tiles = [
   {
@@ -60,7 +60,7 @@ export default async function LoginPage() {
                 className={`bg-[#111] border border-[#1a1a1a] rounded-2xl p-4 flex gap-3 ${
                   t.wide ? "col-span-2 flex-row items-center" : "flex-col"
                 }`}
-                style={patrickHand.style}
+                style={dmSans.style}
               >
                 <span className="text-xl flex-shrink-0">{t.icon}</span>
                 <div>
@@ -72,7 +72,7 @@ export default async function LoginPage() {
                   </p>
                   <p
                     className="text-[#444] text-xs leading-relaxed"
-                    style={patrickHand.style}
+                    style={dmSans.style}
                   >
                     {t.desc}
                   </p>
