@@ -137,11 +137,22 @@ export default function ChatContainer({
                   key={chatMessage._id}
                   className={`mb-4 flex ${isOwn ? "justify-end" : "justify-start"}`}
                 >
-                  <div
-                    className="rounded-xl bg-[#121318] p-3 text-neutral-200 max-w-[70%] break-words overflow-hidden"
-                    style={dmSans.style}
-                  >
-                    {chatMessage.text}
+                  <div className="max-w-[70%] w-fit" style={dmSans.style}>
+                    <div className="rounded-xl bg-[#121318] p-3 text-neutral-200 break-words overflow-hidden">
+                      <p>{chatMessage.text}</p>
+                      <span
+                        className={`text-[10px] text-neutral-500 mt-1 flex ${isOwn ? "justify-end" : "justify-end"}`}
+                        style={dmSans.style}
+                      >
+                        {new Date(chatMessage.createdAt).toLocaleTimeString(
+                          [],
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          },
+                        )}
+                      </span>
+                    </div>
                   </div>
                 </div>
               );
