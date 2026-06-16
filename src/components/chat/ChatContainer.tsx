@@ -47,7 +47,6 @@ export default function ChatContainer({
   }, [selectedConversation]);
 
   // Join the socket room whenever the selected conversation changes
-
   useEffect(() => {
     if (!selectedConversation) return;
 
@@ -57,7 +56,6 @@ export default function ChatContainer({
   }, [selectedConversation]);
 
   // Listen for incoming messages from socket and update chat UI
-
   useEffect(() => {
     socket.on("receive-message", (message) => {
       console.log("Received message: ", message);

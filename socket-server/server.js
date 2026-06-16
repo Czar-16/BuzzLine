@@ -1,7 +1,14 @@
+import dotenv from "dotenv";
+import mongoose from "mongoose";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
 import http from "http";
+
+dotenv.config({
+  path: "../.env",
+});
+console.log(process.env.MONGODB_URI);
 
 const app = express();
 app.use(cors());
@@ -15,12 +22,21 @@ const io = new Server(server, {
   },
 });
 
+// Track online users: socketId → userId
+const onlineUsers = new Map();
+
 io.on("connection", (socket) => {
   console.log("Client connected: ", socket.id);
+  console.log(`FINAL ONE ::  socket Id : ${socket.id}`);
+
+  // Map the socket ID to the user ID when a user comes online
+  socket.on("user-connected", (userId) => {
+    onlineUsers.set(socket.id, userId);
+    console.log(`User ${userId} connected and socket Id : ${socket.id}`);
+  });
 
   socket.on("join-conversation", (conversationId) => {
     socket.join(conversationId);
-
     console.log(`Socket ${socket.id} joined conversation ${conversationId}`);
   });
 
