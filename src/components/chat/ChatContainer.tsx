@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { dmSans, syne } from "@/lib/fonts";
 import { SendHorizonal, UserRound } from "lucide-react";
+import { socket } from "@/lib/socket-client";
 
 export default function ChatContainer({
   selectedConversation,
@@ -45,15 +46,40 @@ export default function ChatContainer({
     fetchMessage();
   }, [selectedConversation]);
 
+  // Join the socket room whenever the selected conversation changes
+
+  useEffect(() => {
+    if (!selectedConversation) return;
+
+    socket.emit("join-conversation", selectedConversation._id);
+
+    console.log("Joined conversation: ", selectedConversation._id);
+  }, [selectedConversation]);
+
+  // Listen for incoming messages from socket and update chat UI
+
+  useEffect(() => {
+    socket.on("receive-message", (message) => {
+      console.log("Received message: ", message);
+
+      // Add the received message to the chat UI
+      setChatMessages((prev) => [...prev, message]);
+    });
+
+    return () => {
+      socket.off("receive-message");
+    };
+  }, []);
+
   const { data: session } = useSession();
   const otherUser = selectedConversation?.participants.find(
     (p: any) => p._id !== session?.user?.id,
   );
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const sendMessage = async () => {
     if (!messageText.trim()) return;
-
     try {
       const res = await fetch("/api/messages", {
         method: "POST",
@@ -67,31 +93,34 @@ export default function ChatContainer({
       });
 
       if (!res.ok) throw new Error("Failed to send");
+
       const data = await res.json();
 
-      console.log("data is : ", data);
-      console.log("message returned:", data.message);
-
       if (data.success) {
+        // update message in the chat container
         setChatMessages((prev) => [...prev, data.message]);
-        setConversations((prev: any[]) =>
-          // console.log("before update", prev)
 
+        socket.emit("send-message", {
+          conversationId: selectedConversation._id,
+          message: data.message,
+        });
+
+        // update latest message in the sidebar
+        setConversations((prev: any[]) =>
           prev.map((conversation) => {
-            console.log("before update", prev);
+            // console.log("before update", prev);
             if (conversation._id === selectedConversation._id) {
               return {
                 ...conversation,
                 latestMessage: data.message,
               };
             }
+
             return conversation;
           }),
         );
-        // console.log("selectedConversation", selectedConversation);
-
         setMessageText("");
-
+        // after sending big message text area : resets to its original size
         if (textareaRef.current) textareaRef.current.style.height = "auto";
       }
     } catch (error) {

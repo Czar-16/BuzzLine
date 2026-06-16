@@ -18,6 +18,17 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("Client connected: ", socket.id);
 
+  socket.on("join-conversation", (conversationId) => {
+    socket.join(conversationId);
+
+    console.log(`Socket ${socket.id} joined conversation ${conversationId}`);
+  });
+
+  socket.on("send-message", ({ conversationId, message }) => {
+    console.log("Message event received:", message.text);
+    socket.to(conversationId).emit("receive-message", message);
+  });
+
   socket.on("disconnect", () => {
     console.log("Client disconnected", socket.id);
   });
