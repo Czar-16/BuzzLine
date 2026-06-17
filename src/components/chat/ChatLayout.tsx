@@ -7,6 +7,7 @@ import { socket } from "@/lib/socket-client";
 import { useSession } from "next-auth/react";
 
 export default function ChatLayout() {
+  console.log("ChatLayout rendered");
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [conversations, setConversations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,16 +21,26 @@ export default function ChatLayout() {
 
   const { data: session } = useSession();
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected  to socket server : ", socket.id);
-      console.log("Sending user id:", session?.user?.id);
-      socket.emit("user-connected", session?.user?.id);
-    });
+  // useEffect(() => {
+  //   socket.on("connect", () => {
+  //     console.log("Connected  to socket server : ", socket.id);
+  //     console.log("test message");
 
-    return () => {
-      socket.off("connect");
-    };
+  //     console.log("Sending user id:", session?.user?.id);
+  //     socket.emit("user-connected", session?.user?.id);
+  //   });
+
+  //   return () => {
+  //     socket.off("connect");
+  //   };
+  // }, [session]);
+
+  useEffect(() => {
+    if (!session?.user?.id) return;
+
+    console.log("Sending user id:", session.user.id);
+
+    socket.emit("user-connected", session.user.id);
   }, [session]);
 
   return (

@@ -5,10 +5,19 @@ import { Server } from "socket.io";
 import cors from "cors";
 import http from "http";
 
+import User from "./user.js";
+
 dotenv.config({
   path: "../.env",
 });
-console.log(process.env.MONGODB_URI);
+
+await mongoose.connect(process.env.MONGODB_URI);
+console.log("MongoDB Connected");
+
+// Reset all users to offline when the server boots up.
+// Otherwise, if your server restarts, users who were online get permanently stuck as "online"!
+// fine for the development phase
+await User.updateMany({}, { isOnline: false });
 
 const app = express();
 app.use(cors());
@@ -30,8 +39,17 @@ io.on("connection", (socket) => {
   console.log(`FINAL ONE ::  socket Id : ${socket.id}`);
 
   // Map the socket ID to the user ID when a user comes online
-  socket.on("user-connected", (userId) => {
+  socket.on("user-connected", async (userId) => {
+    console.log("Received user-connected:", userId);
+    // onlineUsers.set(userId, socket.id);
     onlineUsers.set(socket.id, userId);
+    console.log("Map after connect:", onlineUsers);
+
+    // mark the user online
+    await User.findByIdAndUpdate(userId, {
+      isOnline: true,
+    });
+
     console.log(`User ${userId} connected and socket Id : ${socket.id}`);
   });
 
@@ -45,7 +63,19 @@ io.on("connection", (socket) => {
     socket.to(conversationId).emit("receive-message", message);
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", async () => {
+    // mark user offline
+    console.log("Map before disconnect:", onlineUsers);
+    const userId = onlineUsers.get(socket.id);
+    if (userId) {
+      await User.findByIdAndUpdate(userId, {
+        isOnline: false,
+        lastActive: new Date(),
+      });
+
+      onlineUsers.delete(socket.id);
+      console.log(`User ${userId} Disconnected...`);
+    }
     console.log("Client disconnected", socket.id);
   });
 });
