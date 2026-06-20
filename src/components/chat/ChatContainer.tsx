@@ -140,9 +140,23 @@ export default function ChatContainer({
             <h2 className="text-white font-semibold" style={syne.style}>
               @{otherUser?.username}
             </h2>
-            <p className="text-xs text-neutral-500" style={syne.style}>
-              User status coming soon...
-            </p>
+            {otherUser?.isOnline ? (
+              <p className="text-xs text-green-500" style={syne.style}>
+                Online
+              </p>
+            ) : (
+              <p className="text-xs text-neutral-500" style={syne.style}>
+                Last seen{" "}
+                {otherUser?.lastActive
+                  ? new Date(otherUser.lastActive).toLocaleString([], {
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "recently"}
+              </p>
+            )}
           </div>
         </div>
       )}
