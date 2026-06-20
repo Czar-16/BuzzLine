@@ -10,51 +10,35 @@ Buzzline allows users to create accounts, choose unique usernames, search for ot
 
 ## Signup
 
-```md
-![Signup](./public/screenshots/signup.png)
-```
+![Signup](public/screenshots/signup.png)
 
 ## Login
 
-```md
-![Login](./public/screenshots/login.png)
-```
+![Login](public/screenshots/login.png)
 
 ## Choose Username
 
-```md
-![Choose Username](./public/screenshots/choose-username.png)
-```
+![Choose Username](public/screenshots/choose-username.png)
 
 ## User Search
 
-```md
-![User Search](./public/screenshots/search.png)
-```
+![User Search](public/screenshots/search.png)
 
 ## Chat Interface
 
-```md
-![Chat Interface](./public/screenshots/chat.png)
-```
+![Chat Interface](public/screenshots/chat.png)
 
 ## Online Status
 
-```md
-![Presence](./public/screenshots/online.png)
-```
+![Presence](public/screenshots/online.png)
 
 ## Last Seen
 
-```md
-![Presence](./public/screenshots/lastseen.png)
-```
+![Last Seen](public/screenshots/lastseen.png)
 
 ## Logout Confirmation
 
-```md
-![Logout](./public/screenshots/logout.png)
-```
+![Logout](public/screenshots/logout.png)
 
 ---
 
