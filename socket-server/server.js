@@ -40,15 +40,14 @@ io.on("connection", (socket) => {
 
   // Map the socket ID to the user ID when a user comes online
   socket.on("user-connected", async (userId) => {
-    console.log("Received user-connected:", userId);
-    // onlineUsers.set(userId, socket.id);
     onlineUsers.set(socket.id, userId);
-    console.log("Map after connect:", onlineUsers);
 
     // mark the user online
     await User.findByIdAndUpdate(userId, {
       isOnline: true,
     });
+
+    io.emit("user-online", userId);
 
     console.log(`User ${userId} connected and socket Id : ${socket.id}`);
   });
@@ -70,6 +69,11 @@ io.on("connection", (socket) => {
     if (userId) {
       await User.findByIdAndUpdate(userId, {
         isOnline: false,
+        lastActive: new Date(),
+      });
+
+      io.emit("user-offline", {
+        userId,
         lastActive: new Date(),
       });
 
