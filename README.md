@@ -9,12 +9,12 @@ Buzzline enables users to create accounts, choose unique usernames, discover oth
 ## 🔗 Live Demo
 
 <p align="center">
-  <a href="https://your-vercel-url.vercel.app">
+  <a href="https://buzzline-seven.vercel.app">
     <img src="https://img.shields.io/badge/🚀%20Try%20Buzzline%20Live-000000?style=for-the-badge" alt="Live Demo">
   </a>
 </p>
 
-**Frontend:** https://your-vercel-url.vercel.app
+**Frontend:** https://buzzline-seven.vercel.app
 
 **Backend:** Railway Deployment
 
@@ -384,11 +384,7 @@ Deploy using:
 
 ## 🔗 Live Demo
 
-Coming Soon...
-
-Frontend: TBD
-
-Socket Server: TBD
+https://buzzline-seven.vercel.app
 
 ---
 
