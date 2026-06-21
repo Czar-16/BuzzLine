@@ -7,7 +7,6 @@ import { socket } from "@/lib/socket-client";
 import { useSession } from "next-auth/react";
 
 export default function ChatLayout() {
-  console.log("ChatLayout rendered");
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [conversations, setConversations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,8 +23,6 @@ export default function ChatLayout() {
   useEffect(() => {
     if (!session?.user?.id) return;
 
-    console.log("Sending user id:", session.user.id);
-
     socket.emit("user-connected", session.user.id);
   }, [session]);
 
@@ -33,8 +30,6 @@ export default function ChatLayout() {
   useEffect(() => {
     // server se "user-online" event aaya toh conversations state update karo
     socket.on("user-online", (userId) => {
-      console.log("User online:", userId);
-
       setConversations((prev: any[]) =>
         // har conversation pe loop
         prev.map((conversation) => ({
@@ -70,8 +65,6 @@ export default function ChatLayout() {
 
     // server se "user-offline" event aaya toh conversations state update karo
     socket.on("user-offline", ({ userId, lastActive }) => {
-      console.log("User offline:", userId);
-
       setConversations((prev: any[]) =>
         // har conversation pe loop
         prev.map((conversation) => ({

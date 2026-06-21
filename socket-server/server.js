@@ -35,8 +35,8 @@ const io = new Server(server, {
 const onlineUsers = new Map();
 
 io.on("connection", (socket) => {
-  console.log("Client connected: ", socket.id);
-  console.log(`FINAL ONE ::  socket Id : ${socket.id}`);
+  // console.log("Client connected: ", socket.id);
+  // console.log(`FINAL ONE ::  socket Id : ${socket.id}`);
 
   // Map the socket ID to the user ID when a user comes online
   socket.on("user-connected", async (userId) => {
@@ -49,22 +49,25 @@ io.on("connection", (socket) => {
 
     io.emit("user-online", userId);
 
-    console.log(`User ${userId} connected and socket Id : ${socket.id}`);
+    // console.log(`User ${userId} connected and socket Id : ${socket.id}`);
   });
 
   socket.on("join-conversation", (conversationId) => {
     socket.join(conversationId);
-    console.log(`Socket ${socket.id} joined conversation ${conversationId}`);
+    // console.log(`Socket ${socket.id} joined conversation ${conversationId}`);
   });
 
   socket.on("send-message", ({ conversationId, message }) => {
-    console.log("Message event received:", message.text);
-    socket.to(conversationId).emit("receive-message", message);
-  });
+    // console.log("Message event received:", message.text);
+    // console.log("Sending to room:", conversationId);
 
+    socket.to(conversationId).emit("receive-message", message);
+
+    // console.log("receive-message emitted");
+  });
   socket.on("disconnect", async () => {
     // mark user offline
-    console.log("Map before disconnect:", onlineUsers);
+    // console.log("Map before disconnect:", onlineUsers);
     const userId = onlineUsers.get(socket.id);
     if (userId) {
       await User.findByIdAndUpdate(userId, {
@@ -78,9 +81,9 @@ io.on("connection", (socket) => {
       });
 
       onlineUsers.delete(socket.id);
-      console.log(`User ${userId} Disconnected...`);
+      // console.log(`User ${userId} Disconnected...`);
     }
-    console.log("Client disconnected", socket.id);
+    // console.log("Client disconnected", socket.id);
   });
 });
 

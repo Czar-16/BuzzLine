@@ -32,13 +32,6 @@ export default function ChatSidebar({
   selectedConversation,
   setSelectedConversation,
 }: any) {
-  // export default function ChatSidebar({
-  //   selectedConversation,
-  //   setSelectedConversation,
-  // }: {
-  //   selectedConversation: any; // TODO: replace with proper type if needed
-  //   setSelectedConversation: (value: any) => void;
-  // }) {
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -50,7 +43,6 @@ export default function ChatSidebar({
         if (data.success) {
           setConversations(data.conversations);
         }
-        console.log("conversation is : ", data.conversations);
       } catch (error) {
         console.log(error);
       } finally {
@@ -96,12 +88,6 @@ export default function ChatSidebar({
         }),
       });
       const data = await res.json();
-      console.log("POST conversation:", data.conversation);
-      // if (data.success) {
-      //   setSelectedConversation(data.conversation);
-      //   setSearch("");
-      //   setSearchResult([]);
-      // }
 
       // true/false deta hai, bas exist karta hai ya nahi
       if (data.success) {
@@ -115,8 +101,6 @@ export default function ChatSidebar({
         setSearch("");
         setSearchResult([]);
       }
-
-      console.log(data);
     } catch (error) {
       console.log(error);
     }

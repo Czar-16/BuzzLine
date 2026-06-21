@@ -51,23 +51,34 @@ export default function ChatContainer({
     if (!selectedConversation) return;
 
     socket.emit("join-conversation", selectedConversation._id);
-
-    console.log("Joined conversation: ", selectedConversation._id);
   }, [selectedConversation]);
 
-  // Listen for incoming messages from socket and update chat UI
   useEffect(() => {
-    socket.on("receive-message", (message) => {
-      console.log("Received message: ", message);
+    const handleReceiveMessage = (message: any) => {
+      setConversations((prev: any[]) =>
+        prev.map((conversation) => {
+          if (conversation._id === message.conversation) {
+            return {
+              ...conversation,
+              latestMessage: message,
+            };
+          }
 
-      // Add the received message to the chat UI
-      setChatMessages((prev) => [...prev, message]);
-    });
+          return conversation;
+        }),
+      );
+
+      if (message.conversation === selectedConversation?._id) {
+        setChatMessages((prev) => [...prev, message]);
+      }
+    };
+
+    socket.on("receive-message", handleReceiveMessage);
 
     return () => {
-      socket.off("receive-message");
+      socket.off("receive-message", handleReceiveMessage);
     };
-  }, []);
+  }, [selectedConversation]);
 
   const { data: session } = useSession();
   const otherUser = selectedConversation?.participants.find(
@@ -106,7 +117,6 @@ export default function ChatContainer({
         // update latest message in the sidebar
         setConversations((prev: any[]) =>
           prev.map((conversation) => {
-            // console.log("before update", prev);
             if (conversation._id === selectedConversation._id) {
               return {
                 ...conversation,
