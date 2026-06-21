@@ -1,8 +1,208 @@
 # 🚀 Buzzline
 
-A modern real-time chat application built with **Next.js**, **TypeScript**, **Socket.io**, **MongoDB**, **Shadcn UI**, **Tailwind CSS**, and **NextAuth.js**.
+A modern real-time chat application built with **Next.js**, **TypeScript**, **Socket.io**, **MongoDB**, **Mongoose**, **Shadcn UI**, **Tailwind CSS**, and **NextAuth.js**.
 
-Buzzline allows users to create accounts, choose unique usernames, search for other users, start conversations, exchange messages in real time, and track online presence with live status updates.
+Buzzline enables users to create accounts, choose unique usernames, discover other users, start conversations, exchange messages instantly, and track real-time online presence with live status updates.
+
+---
+
+## 🔗 Live Demo
+
+<p align="center">
+  <a href="https://your-vercel-url.vercel.app">
+    <img src="https://img.shields.io/badge/🚀%20Try%20Buzzline%20Live-000000?style=for-the-badge" alt="Live Demo">
+  </a>
+</p>
+
+**Frontend:** https://your-vercel-url.vercel.app
+
+**Backend:** Railway Deployment
+
+---
+
+## ✨ Features
+
+### 🔐 Authentication & Authorization
+
+- Google OAuth Authentication using NextAuth.js
+- Credentials-Based Signup & Login
+- JWT-Based Session Management
+- Protected Routes
+- Secure Password Hashing with bcrypt
+
+### 👤 User Onboarding
+
+- Unique Username Selection Flow
+- Username Availability Validation
+- One-Time Username Setup for Google Users
+- Persistent User Profiles
+
+### 🔍 User Search
+
+- Search Users by Username
+- Debounced Search Requests
+- Instant Search Results
+
+### 💬 Real-Time Messaging
+
+- One-to-One Conversations
+- Instant Message Delivery using Socket.io
+- Automatic Conversation Creation
+- Real-Time Chat Updates
+- Socket Room-Based Messaging
+- Persistent Message History
+
+### 🟢 Presence System
+
+- Real-Time Online Status
+- Last Active Tracking
+- Live Presence Updates Across Clients
+- Automatic Online/Offline Detection
+
+### 🎨 Chat Experience
+
+- Latest Message Preview in Sidebar
+- Automatic Conversation Sorting
+- Auto Scroll to Latest Messages
+- Message Timestamps
+- Responsive Chat Interface
+- Clean Minimal Design
+
+### ⚙️ Account Management
+
+- Secure Logout Flow
+- Session Persistence
+- Protected Chat Access
+
+### 🌙 UI / UX
+
+- AMOLED Dark Theme
+- Responsive Layout
+- Mobile Friendly Design
+- Built with Shadcn UI
+- Smooth User Experience
+
+---
+
+## 🏗️ System Architecture
+
+```text
+┌──────────────────────────────────────────────┐
+│                Frontend (Next.js)            │
+│                                              │
+│  • Login / Signup                            │
+│  • Google OAuth                              │
+│  • Username Selection                        │
+│  • User Search                               │
+│  • Chat Interface                            │
+│  • Presence UI                               │
+└───────────────────┬──────────────────────────┘
+                    │
+                    │ REST API
+                    ▼
+┌──────────────────────────────────────────────┐
+│            Next.js API Routes                │
+│                                              │
+│  /api/register                               │
+│  /api/auth                                   │
+│  /api/users                                  │
+│  /api/conversations                          │
+│  /api/messages                               │
+└───────────────────┬──────────────────────────┘
+                    │
+                    │ Mongoose
+                    ▼
+┌──────────────────────────────────────────────┐
+│               MongoDB Atlas                  │
+│                                              │
+│  Users                                       │
+│  Conversations                               │
+│  Messages                                    │
+└──────────────────────────────────────────────┘
+
+
+                    WebSocket
+                         │
+                         ▼
+
+┌──────────────────────────────────────────────┐
+│            Socket.io Server (3001)           │
+│                                              │
+│  Presence Management                         │
+│  Room Management                             │
+│  Real-Time Messaging                         │
+│                                              │
+│  user-connected                              │
+│  user-online                                 │
+│  user-offline                                │
+│  join-conversation                           │
+│  send-message                                │
+│  receive-message                             │
+└───────────────────┬──────────────────────────┘
+                    │
+                    ▼
+           Conversation Rooms
+                    │
+        ┌───────────┴───────────┐
+        ▼                       ▼
+     User A                  User B
+```
+
+---
+
+## 🔄 Message Flow
+
+```text
+User A
+  │
+  │ Send Message
+  ▼
+Next.js API Route
+  │
+  │ Save Message
+  ▼
+MongoDB Atlas
+  │
+  │ Return Saved Message
+  ▼
+Socket.io Server
+  │
+  │ socket.to(conversationId)
+  ▼
+Conversation Room
+  │
+  ▼
+User B Receives Message Instantly
+```
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Shadcn UI
+
+### Backend
+
+- Next.js API Routes
+- Node.js
+- Socket.io
+
+### Database
+
+- MongoDB Atlas
+- Mongoose
+
+### Authentication
+
+- NextAuth.js
+- Google OAuth
+- JWT
 
 ---
 
@@ -42,98 +242,7 @@ Buzzline allows users to create accounts, choose unique usernames, search for ot
 
 ---
 
-# ✨ Features
-
-## Authentication & Authorization
-
-- Google OAuth Authentication using NextAuth.js
-- Credentials-Based Signup & Login
-- JWT-Based Session Management
-- Protected Routes
-- Secure Password Hashing with bcrypt
-
-## User Onboarding
-
-- Unique Username Selection Flow
-- Username Availability Validation
-- One-Time Username Setup for Google Users
-- Persistent User Profiles
-
-## User Search
-
-- Search Users by Username
-- Debounced Search Requests
-- Instant Search Results
-
-## Real-Time Messaging
-
-- One-to-One Conversations
-- Instant Message Delivery using Socket.io
-- Real-Time Chat Updates
-- Automatic Conversation Creation
-- Socket Room-Based Messaging
-
-## Presence System
-
-- Real-Time Online Status
-- Last Active Tracking
-- Live Presence Updates Across Clients
-- Automatic Online/Offline Detection
-
-## Chat Experience
-
-- Latest Message Preview in Sidebar
-- Automatic Conversation Sorting
-- Auto Scroll to Latest Messages
-- Message Timestamps
-- Responsive Chat Interface
-
-## Account Management
-
-- Secure Logout Flow
-- Session Persistence
-- Protected Chat Access
-
-## UI / UX
-
-- AMOLED Dark Theme
-- Clean Minimal Interface
-- Responsive Layout
-- Built with Shadcn UI
-- Mobile Friendly Design
-
----
-
-# 🛠️ Tech Stack
-
-## Frontend
-
-- Next.js 16
-- React
-- TypeScript
-- Tailwind CSS
-- Shadcn UI
-
-## Backend
-
-- Next.js API Routes
-- Node.js
-- Socket.io
-
-## Database
-
-- MongoDB Atlas
-- Mongoose
-
-## Authentication
-
-- NextAuth.js
-- Google OAuth
-- JWT
-
----
-
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```bash
 Buzzline
@@ -147,6 +256,8 @@ Buzzline
 │   └── types
 │
 ├── public
+│
+├── screenshots
 │
 ├── socket-server
 │   ├── server.js
@@ -164,24 +275,29 @@ Buzzline
 Create a `.env.local` file in the root directory:
 
 ```env
+# MongoDB connection string from MongoDB Atlas
 MONGODB_URI=your_mongodb_connection_string
 
+# Random secret string used to sign JWT sessions (use: openssl rand -base64 32)
 NEXTAUTH_SECRET=your_nextauth_secret
 
+# Base URL of your app (use http://localhost:3000 for local dev)
 NEXTAUTH_URL=http://localhost:3000
 
+# From Google Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client
 GOOGLE_CLIENT_ID=your_google_client_id
-
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
+# URL where your Socket.io server is running
 NEXT_PUBLIC_SOCKET_URL=http://localhost:3001
+
 ```
 
 ---
 
-# 🚀 Getting Started
+## 🚀 Getting Started
 
-## Clone Repository
+### Clone Repository
 
 ```bash
 git clone https://github.com/Czar-16/BuzzLine.git
@@ -189,17 +305,13 @@ git clone https://github.com/Czar-16/BuzzLine.git
 cd BuzzLine
 ```
 
----
-
-## Install Frontend Dependencies
+### Install Frontend Dependencies
 
 ```bash
 npm install
 ```
 
----
-
-## Install Socket Server Dependencies
+### Install Socket Server Dependencies
 
 ```bash
 cd socket-server
@@ -207,9 +319,7 @@ cd socket-server
 npm install
 ```
 
----
-
-## Run Frontend
+### Run Frontend
 
 ```bash
 npm run dev
@@ -221,9 +331,7 @@ Application will be available at:
 http://localhost:3000
 ```
 
----
-
-## Run Socket Server
+### Run Socket Server
 
 Open another terminal:
 
@@ -241,69 +349,52 @@ http://localhost:3001
 
 ---
 
-# 🔄 Real-Time Architecture
+## 📈 Key Highlights
 
-```text
-User A
-   │
-   ▼
-Socket.io Server
-   │
-   ▼
-User B
-
-Messages and presence updates are broadcast
-through conversation rooms in real time.
-```
-
----
-
-# 📈 Key Highlights
-
-- Built a production-style real-time chat platform
-- Implemented WebSocket communication using Socket.io
-- Developed a real-time user presence system
+- Built a production-style real-time chat platform using Socket.io
+- Implemented conversation-based WebSocket room architecture
+- Developed a real-time online presence system with last-active tracking
 - Integrated Google OAuth and Credentials Authentication
-- Designed a responsive AMOLED dark-themed UI
-- Implemented username-based user discovery
-- Managed conversations and messages using MongoDB
-- Built scalable conversation room architecture for messaging
+- Built username-based user discovery and onboarding flow
+- Designed normalized MongoDB schemas for Users, Conversations, and Messages
+- Created a responsive AMOLED dark-themed user interface
+- Implemented automatic conversation management and message persistence
 
 ---
 
-# 🌐 Deployment
+## 🌐 Deployment
 
-## Frontend
+### Frontend
 
 Deploy using:
 
 - Vercel
 
-## Socket Server
+### Socket Server
 
 Deploy using:
 
 - Railway
 
-## Database
+### Database
 
 - MongoDB Atlas
 
 ---
 
-# 🔮 Future Improvements
+## 🔗 Live Demo
 
-- Group Chats
-- Message Reactions
-- File Sharing
-- Push Notifications
-- Voice & Video Calling
+Coming Soon...
+
+Frontend: TBD
+
+Socket Server: TBD
 
 ---
 
-# 👨‍💻 Author
+## 👨‍💻 Author
 
-### Anoop Jha ~ (Czar16)
+### Anoop Jha (Czar16)
 
 - GitHub: https://github.com/Czar-16
 - Twitter/X: https://x.com/itsCzar16
