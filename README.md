@@ -9,9 +9,9 @@ Buzzline enables users to create accounts, choose unique usernames, discover oth
 ## 🔗 Live Demo
 
 <p align="center">
-  <a href="https://your-vercel-url.com">
-  <img src="public/screenshots/favicon.ico" width="20" style="vertical-align:middle"/> &nbsp; Try BuzzLine Live
-</a>
+  <a href="https://your-vercel-url.vercel.app">
+    <img src="https://img.shields.io/badge/🚀%20Try%20Buzzline%20Live-000000?style=for-the-badge" alt="Live Demo">
+  </a>
 </p>
 
 **Frontend:** https://your-vercel-url.vercel.app
