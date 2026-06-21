@@ -1,6 +1,6 @@
 # 🚀 Buzzline
 
-A modern real-time chat application built with **Next.js**, **Socket.io**, **MongoDB Atlas**, and **NextAuth.js**.
+A modern real-time chat application built with **Next.js**, **TypeScript**, **Socket.io**, **MongoDB**, **Shadcn UI**, **Tailwind CSS**, and **NextAuth.js**.
 
 Buzzline allows users to create accounts, choose unique usernames, search for other users, start conversations, exchange messages in real time, and track online presence with live status updates.
 
